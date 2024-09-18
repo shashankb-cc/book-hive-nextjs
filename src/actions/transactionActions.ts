@@ -2,8 +2,8 @@
 
 import { TransactionRepository } from "@/repositories/transactionRepository";
 import { auth } from "@/auth";
-import { db } from "./db";
 import { MemberRepository } from "@/repositories/memberRepository";
+import { db } from "@/drizzle/db";
 
 const transactionRepository = new TransactionRepository(db);
 const memberRepository = new MemberRepository(db);

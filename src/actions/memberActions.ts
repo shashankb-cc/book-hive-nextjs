@@ -3,8 +3,9 @@
 import { MemberRepository } from "@/repositories/memberRepository";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import { db } from "@/actions/db";
 import { getFavorites } from "./favoriteActions";
+import { db } from "@/drizzle/db";
+import { IMember } from "@/lib/models";
 
 const memberRepository = new MemberRepository(db);
 
@@ -79,6 +80,17 @@ export async function getUserDetails(session: any) {
   } catch (error) {
     console.error("Error fetching user details:", error);
     return { error: "Failed to fetch user details" };
+  }
+}
+export async function findUserByEmail(
+  email: string
+): Promise<IMember | undefined> {
+  try {
+    const userDetails = await memberRepository.getMemberByEmail(email);
+    return userDetails as IMember;
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+    return undefined;
   }
 }
 

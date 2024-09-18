@@ -5,9 +5,11 @@ import { Session } from "next-auth";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { IBook } from "@/lib/models";
 import { cloudinary } from "@/lib/cloudinary";
+import { VercelPgDatabase } from "drizzle-orm/vercel-postgres";
+import * as schema from "@/drizzle/schema";
 
 export class BookRepository {
-  constructor(private db: MySql2Database<Record<string, never>>) {}
+  constructor(private db: VercelPgDatabase<typeof schema>) {}
 
   private buildWhereConditions(
     search?: string,
@@ -103,7 +105,7 @@ export class BookRepository {
         imageUrl = await this.uploadImage(imageFile);
       }
 
-      const [newBook] = await this.db.insert(books).values({
+      const newBook = await this.db.insert(books).values({
         ...bookData,
         imageUrl,
       });
@@ -122,7 +124,7 @@ export class BookRepository {
         imageUrl = await this.uploadImage(imageFile);
       }
 
-      const [updatedBook] = await this.db
+      const updatedBook = await this.db
         .update(books)
         .set({ ...bookData, imageUrl })
         .where(eq(books.id, id));

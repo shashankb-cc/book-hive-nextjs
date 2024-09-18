@@ -2,7 +2,7 @@
 
 import { MemberRepository } from "@/repositories/memberRepository";
 import { auth } from "@/auth";
-import { db } from "@/actions/db";
+import { db } from "@/drizzle/db";
 
 const memberRepository = new MemberRepository(db);
 

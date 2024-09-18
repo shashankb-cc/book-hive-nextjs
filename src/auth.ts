@@ -1,11 +1,10 @@
-  
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { findUserByEmail } from "@/lib/data";
 import { User } from "next-auth";
 import Google from "next-auth/providers/google";
+import { findUserByEmail } from "./actions/memberActions";
 
 function mapMemberToUser(member: {
   id: any;

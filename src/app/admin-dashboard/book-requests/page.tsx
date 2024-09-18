@@ -3,6 +3,7 @@ import React from "react";
 import { getDrizzleDB } from "@/drizzle/drizzleDB";
 import { TransactionRepository } from "@/repositories/transactionRepository";
 import Transactions from "@/components/admin-dashboard/book-request";
+import { db } from "@/drizzle/db";
 
 interface TransactionsPageProps {
   searchParams: { page?: string; status?: string; search?: string };
@@ -16,7 +17,6 @@ export default async function TransactionsPage({
   const search = searchParams.search || "";
   const transactionsPerPage = 10;
 
-  const db = getDrizzleDB();
   const transactionRepo = new TransactionRepository(db);
 
   const { transactions, totalPages } = await transactionRepo.getTransactions(

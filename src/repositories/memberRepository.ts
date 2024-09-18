@@ -3,11 +3,12 @@ import { books, favorites, members } from "../drizzle/schema";
 import { eq, like, SQL, sql, and } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
-import { Session } from "next-auth";
 import { IMember, IMemberBase } from "@/lib/models";
+import { VercelPgDatabase } from "drizzle-orm/vercel-postgres";
+import * as schema from "@/drizzle/schema";
 
 export class MemberRepository {
-  constructor(private db: MySql2Database<Record<string, never>>) {}
+  constructor(private db: VercelPgDatabase<typeof schema>) {}
 
   private buildWhereConditions(search?: string): SQL | undefined {
     if (search) {
