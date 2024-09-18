@@ -3,10 +3,11 @@
 import { BookRepository } from "@/repositories/bookRepository";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import { db, buildWhereConditions } from "./db";
+import {  buildWhereConditions } from "./db";
 import { books } from "@/drizzle/schema";
 import { desc, sql } from "drizzle-orm";
 import { IBook } from "@/lib/models";
+import { db } from "@/drizzle/db";
 
 const bookRepository = new BookRepository(db);
 
