@@ -19,9 +19,14 @@ import {
 } from "@/components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BorrowConfirmationDialog } from "@/components/dashboard/borrow-confirmation";
+import Image from "next/image";
 
 import { toast } from "@/hooks/use-toast";
-import { addFavorite, getFavorites, removeFavorite } from "@/actions/favoriteActions";
+import {
+  addFavorite,
+  getFavorites,
+  removeFavorite,
+} from "@/actions/favoriteActions";
 import { borrowBook } from "@/actions/transactionActions";
 
 interface DashboardProps {
@@ -200,24 +205,32 @@ export default function Dashboard({
               className="flex flex-col cursor-pointer hover:shadow-lg transition-shadow duration-200"
               onClick={() => handleViewDetails(book)}
             >
-              <CardContent className="p-4">
-                <div
-                  className={`w-full h-32 sm:h-40 bg-primary rounded-md mb-4 flex items-center justify-center`}
-                >
-                  <div
-                    className={`text-xl p-2 text-center max-sm:text-2xl font-bold text-white`}
-                  >
-                    {book.genre}
+              <div className="relative pt-[150%] overflow-hidden rounded-t-lg">
+                {book.imageUrl ? (
+                  <Image
+                    src={book.imageUrl}
+                    alt={book.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="absolute top-0 left-0 "
+                  />
+                ) : (
+                  <div className="absolute top-0 left-0 w-full h-full bg-primary flex items-center justify-center">
+                    <div className="text-xl p-2 text-center font-bold text-white">
+                      {book.genre}
+                    </div>
                   </div>
-                </div>
-                <CardTitle className="text-lg font-semibold mb-2">
+                )}
+              </div>
+              <CardContent className="flex-grow p-4">
+                <CardTitle className="text-lg font-semibold mb-2 line-clamp-2">
                   {book.title}
                 </CardTitle>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
+                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-1">
                   {book.author}
                 </p>
               </CardContent>
-              <CardFooter className="flex justify-between items-center mt-auto p-4">
+              <CardFooter className="flex justify-between items-center p-4 border-t">
                 <Button
                   variant="ghost"
                   size="sm"

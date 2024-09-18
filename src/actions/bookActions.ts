@@ -77,8 +77,9 @@ export async function createBook(prevState: any, formData: FormData) {
       totalNumOfCopies: parseInt(formData.get("copies") as string),
       availableNumberOfCopies: parseInt(formData.get("copies") as string),
     };
+    const imageFile = formData.get("image") as File;
 
-    const newBook = await bookRepository.createBook(bookData);
+    const newBook = await bookRepository.createBook(bookData, imageFile);
 
     revalidatePath("/admin-dashboard/dashboard");
     return { success: true, message: "Book added successfully" };
@@ -105,8 +106,9 @@ export async function updateBook(prevState: any, formData: FormData) {
       numOfPages: parseInt(formData.get("pages") as string),
       totalNumOfCopies: parseInt(formData.get("copies") as string),
     };
+    const imageFile = formData.get("image") as File;
 
-    await bookRepository.updateBook(id, bookData);
+    await bookRepository.updateBook(id, bookData, imageFile);
 
     revalidatePath("/admin-dashboard/dashboard");
     return { success: true, message: "Book updated successfully" };
