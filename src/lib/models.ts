@@ -11,6 +11,7 @@ export interface IBookBase {
 export interface IBook extends IBookBase {
   id: number;
   availableNumberOfCopies: number;
+  imageUrl?: string | null;
 }
 
 export const bookSchema = z.object({

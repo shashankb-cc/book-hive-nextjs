@@ -4,6 +4,7 @@ import { eq, or, like, sql, SQL, desc, and } from "drizzle-orm";
 import { Session } from "next-auth";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { IBook } from "@/lib/models";
+import { cloudinary } from "@/lib/cloudinary";
 
 export class BookRepository {
   constructor(private db: MySql2Database<Record<string, never>>) {}
@@ -72,12 +73,40 @@ export class BookRepository {
     });
   }
 
+  async uploadImage(file: File): Promise<string> {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
- 
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream(
+          {
+            folder: "bookCover",
+            resource_type: "auto",
+          },
+          (error, result) => {
+            if (error) {
+              reject(new Error("Failed to upload image"));
+            } else {
+              resolve(result?.secure_url || "");
+            }
+          }
+        )
+        .end(buffer);
+    });
+  }
 
-  async createBook(bookData: Omit<IBook, "id">) {
+  async createBook(bookData: Omit<IBook, "id">, imageFile?: File) {
     try {
-      const [newBook] = await this.db.insert(books).values(bookData);
+      let imageUrl = "";
+      if (imageFile) {
+        imageUrl = await this.uploadImage(imageFile);
+      }
+
+      const [newBook] = await this.db.insert(books).values({
+        ...bookData,
+        imageUrl,
+      });
 
       return newBook;
     } catch (error) {
@@ -86,11 +115,16 @@ export class BookRepository {
     }
   }
 
-  async updateBook(id: number, bookData: Partial<IBook>) {
+  async updateBook(id: number, bookData: Partial<IBook>, imageFile?: File) {
     try {
+      let imageUrl = bookData.imageUrl;
+      if (imageFile) {
+        imageUrl = await this.uploadImage(imageFile);
+      }
+
       const [updatedBook] = await this.db
         .update(books)
-        .set(bookData)
+        .set({ ...bookData, imageUrl })
         .where(eq(books.id, id));
 
       return updatedBook;

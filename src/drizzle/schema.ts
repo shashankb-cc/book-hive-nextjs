@@ -19,6 +19,7 @@ export const books = mysqlTable("books", {
   numOfPages: int("numOfPages").notNull(),
   totalNumOfCopies: int("totalNumOfCopies").notNull(),
   availableNumberOfCopies: int("availableNumberOfCopies").notNull(),
+  imageUrl: varchar("imageUrl", { length: 255 }),
 });
 
 export const members = mysqlTable("members", {
