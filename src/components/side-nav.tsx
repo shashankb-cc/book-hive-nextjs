@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as LucideIcons from "lucide-react";
+import { handleSignOut } from "@/actions/authActions";
 
 type IconName = keyof typeof LucideIcons;
 
@@ -70,13 +71,15 @@ const SideNavBar = ({
           })}
         </ul>
         <div className="p-4">
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            <LogOut className="w-5 h-5 mr-2" />
-            {isOpen && <span>Sign Out</span>}
-          </Button>
+          <form action={handleSignOut}>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <LogOut className="w-5 h-5 mr-2" />
+              {isOpen && <span>Sign Out</span>}
+            </Button>
+          </form>
         </div>
       </nav>
     </div>
