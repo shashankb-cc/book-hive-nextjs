@@ -7,12 +7,11 @@ import { getFavorites } from "./favoriteActions";
 import { db } from "@/drizzle/db";
 import { IMember } from "@/lib/models";
 
-const memberRepository = new MemberRepository(db);
-
 export async function getMemberData(searchParams: {
   [key: string]: string | string[] | undefined;
 }) {
   try {
+    const memberRepository = new MemberRepository(db);
     const result = await memberRepository.getMemberData(
       searchParams as { page?: string; search?: string }
     );
@@ -29,6 +28,7 @@ export async function getMemberData(searchParams: {
 
 export async function createMember(prevState: any, formData: FormData) {
   try {
+    const memberRepository = new MemberRepository(db);
     const result = await memberRepository.createMember(formData);
     if (result === null) {
       revalidatePath("/admin-dashboard/members");
@@ -44,6 +44,7 @@ export async function createMember(prevState: any, formData: FormData) {
 
 export async function updateMember(prevState: any, formData: FormData) {
   try {
+    const memberRepository = new MemberRepository(db);
     const id = parseInt(formData.get("id") as string);
     const result = await memberRepository.updateMember(id, formData);
     if (result === null) {
@@ -60,6 +61,7 @@ export async function updateMember(prevState: any, formData: FormData) {
 
 export async function deleteMember(id: number) {
   try {
+    const memberRepository = new MemberRepository(db);
     const result = await memberRepository.deleteMember(id);
     if (result === null) {
       revalidatePath("/admin-dashboard/members");
@@ -75,6 +77,7 @@ export async function deleteMember(id: number) {
 
 export async function getUserDetails(session: any) {
   try {
+    const memberRepository = new MemberRepository(db);
     const userDetails = await memberRepository.getUserDetails(session);
     return userDetails;
   } catch (error) {
@@ -86,7 +89,9 @@ export async function findUserByEmail(
   email: string
 ): Promise<IMember | undefined> {
   try {
+    const memberRepository = new MemberRepository(db);
     const userDetails = await memberRepository.getMemberByEmail(email);
+    console.log("user details", userDetails);
     return userDetails as IMember;
   } catch (error) {
     console.error("Error fetching user details:", error);
@@ -96,6 +101,7 @@ export async function findUserByEmail(
 
 export async function updateProfile(data: any) {
   try {
+    const memberRepository = new MemberRepository(db);
     await memberRepository.updateProfile(data);
     revalidatePath("/profile");
     return { message: "Profile updated successfully" };
@@ -107,6 +113,7 @@ export async function updateProfile(data: any) {
 
 export async function getProfileData() {
   try {
+    const memberRepository = new MemberRepository(db);
     const session = await auth();
     if (!session?.user?.email) {
       return { success: false, error: "Not authenticated" };
@@ -154,6 +161,7 @@ export async function changePassword(
   newPassword: string
 ) {
   try {
+    const memberRepository = new MemberRepository(db);
     await memberRepository.changePassword(currentPassword, newPassword);
     return { message: "Password changed successfully" };
   } catch (error) {

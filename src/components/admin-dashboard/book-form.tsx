@@ -27,15 +27,14 @@ interface BookFormProps {
 }
 
 export default function BookForm({ onClose, book, onSubmit }: BookFormProps) {
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    book?.imageUrl || null
-  );
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
   } = useForm<BookFormData>({
     resolver: zodResolver(bookSchema),
     defaultValues: {
@@ -50,6 +49,12 @@ export default function BookForm({ onClose, book, onSubmit }: BookFormProps) {
   });
 
   const watchImage = watch("image");
+
+  useEffect(() => {
+    if (book?.imageUrl) {
+      setImagePreview(book.imageUrl);
+    }
+  }, [book]);
 
   useEffect(() => {
     if (watchImage && watchImage.length > 0) {
@@ -225,7 +230,9 @@ export default function BookForm({ onClose, book, onSubmit }: BookFormProps) {
                 <Image
                   src={imagePreview}
                   alt="Book cover preview"
-                  className="w-full max-w-[200px] h-auto rounded-md"
+                  width={200}
+                  height={300}
+                  className="w-full max-w-[200px] h-auto rounded-md object-cover"
                 />
               </div>
             )}

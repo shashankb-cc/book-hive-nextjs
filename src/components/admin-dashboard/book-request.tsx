@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchForm } from "@/components/dashboard/search-form";
+import SearchInput from "@/components/dashboard/search-form";
 import Pagination from "@/components/dashboard/pagination";
 import { useToast } from "@/hooks/use-toast";
 import { Check, X } from "lucide-react";
@@ -116,7 +116,7 @@ export default function Transactions({
                 <SelectItem value="returned">Returned</SelectItem>
               </SelectContent>
             </Select>
-            <SearchForm />
+            <SearchInput placeholder="Search requests" />
           </div>
         </div>
       </header>

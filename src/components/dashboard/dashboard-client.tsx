@@ -4,11 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Heart, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import { SearchForm } from "@/components/dashboard/search-form";
+import SearchInput from "@/components/dashboard/search-form";
 import { UserDropdown } from "@/components/dashboard/user-dropdown";
 import Pagination from "@/components/dashboard/pagination";
 import { BookDetails } from "@/components/dashboard/book-details";
-import { RecentlyAddedBooks } from "@/components/dashboard/recently-added";
 import { IBook } from "@/lib/models";
 import {
   Select,
@@ -31,7 +30,6 @@ import { borrowBook } from "@/actions/transactionActions";
 
 interface DashboardProps {
   books: IBook[];
-  recentlyAddedBooks: IBook[];
   currentPage: number;
   totalPages: number;
   genres: string[];
@@ -40,7 +38,6 @@ interface DashboardProps {
 
 export default function Dashboard({
   books,
-  recentlyAddedBooks,
   currentPage,
   totalPages,
   genres,
@@ -156,7 +153,7 @@ export default function Dashboard({
 
   return (
     <>
-      <header className="bg-white dark:bg-gray-800 shadow mb-6">
+      <header className="bg-white  dark:bg-gray-800 shadow mb-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between">
           <div className="flex items-center mb-4 sm:mb-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -180,7 +177,7 @@ export default function Dashboard({
                 ))}
               </SelectContent>
             </Select>
-            <SearchForm />
+            <SearchInput placeholder="Search books..." />
             <UserDropdown />
           </div>
         </div>
@@ -202,21 +199,21 @@ export default function Dashboard({
           {books.map((book) => (
             <Card
               key={book.id}
-              className="flex flex-col cursor-pointer hover:shadow-lg transition-shadow duration-200"
+              className="flex flex-col h-full cursor-pointer hover:shadow-lg transition-shadow duration-200"
               onClick={() => handleViewDetails(book)}
             >
-              <div className="relative pt-[150%] overflow-hidden rounded-t-lg">
+              <div className="relative aspect-[0.9] overflow-hidden rounded-t-lg">
                 {book.imageUrl ? (
                   <Image
                     src={book.imageUrl}
                     alt={book.title}
                     layout="fill"
-                    objectFit="cover"
-                    className="absolute top-0 left-0 "
+                    objectFit="contain"
+                    className="absolute top-0 left-0"
                   />
                 ) : (
-                  <div className="absolute top-0 left-0 w-full h-full bg-primary flex items-center justify-center">
-                    <div className="text-xl p-2 text-center font-bold text-white">
+                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary to-primary-foreground flex items-center justify-center p-4">
+                    <div className="text-xl text-center font-bold text-primary-foreground">
                       {book.genre}
                     </div>
                   </div>
@@ -226,7 +223,7 @@ export default function Dashboard({
                 <CardTitle className="text-lg font-semibold mb-2 line-clamp-2">
                   {book.title}
                 </CardTitle>
-                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-1">
+                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
                   {book.author}
                 </p>
               </CardContent>

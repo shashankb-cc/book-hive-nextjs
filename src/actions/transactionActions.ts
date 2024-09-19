@@ -4,9 +4,10 @@ import { TransactionRepository } from "@/repositories/transactionRepository";
 import { auth } from "@/auth";
 import { MemberRepository } from "@/repositories/memberRepository";
 import { db } from "@/drizzle/db";
+import { revalidatePath } from "next/cache";
 
-const transactionRepository = new TransactionRepository(db);
 const memberRepository = new MemberRepository(db);
+const transactionRepository = new TransactionRepository(db);
 
 export async function updateTransactionStatus(
   id: number,
@@ -97,6 +98,28 @@ export async function getMemberDueSoonAndOverdueTransactions() {
   return await transactionRepository.getMemberDueSoonAndOverdueTransactions(
     member.id
   );
+}
+export async function cancelBookRequest(id: number) {
+  try {
+    const session = await auth();
+    if (!session) {
+      return { success: false, message: "Not authenticated" };
+    }
+
+    const result = await transactionRepository.cancelTransaction(id);
+
+    if (result.success) {
+      revalidatePath("/dashboard/my-collection");
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Failed to cancel book request:", error);
+    return {
+      success: false,
+      message: "Failed to cancel book request. Please try again.",
+    };
+  }
 }
 
 export async function markBookAsReturned(transactionId: number) {

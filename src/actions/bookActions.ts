@@ -3,7 +3,7 @@
 import { BookRepository } from "@/repositories/bookRepository";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import {  buildWhereConditions } from "./db";
+import { buildWhereConditions } from "./db";
 import { books } from "@/drizzle/schema";
 import { desc, sql } from "drizzle-orm";
 import { IBook } from "@/lib/models";
@@ -132,6 +132,8 @@ export async function deleteBook(id: number) {
     return { success: true, message: "Book deleted successfully" };
   } catch (error) {
     console.error("Failed to delete book:", error);
-    return { error: "Failed to delete book. Please try again." };
+    return {
+      error: "Books has been issued to the User, Can't delete the book",
+    };
   }
 }
