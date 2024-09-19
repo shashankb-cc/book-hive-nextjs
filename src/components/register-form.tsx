@@ -11,7 +11,7 @@ import { Icons } from "@/components/ui/icons";
 import { Mail, Lock, User, Phone, Loader2 } from "lucide-react";
 import { registerSchema, type RegisterFormData } from "@/lib/zodSchema";
 import { useState } from "react";
-import { createUser } from "@/actions/authActions";
+import { createMember } from "@/actions/memberActions";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -34,16 +34,18 @@ export function RegisterForm() {
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
     });
-    
+
     try {
-      const result = await createUser(formData);
-      if (result.success) {
+      const result = await createMember(undefined, formData);
+      if (result.message) {
         setRegistrationSuccess(true);
         setTimeout(() => {
           router.push("/login");
         }, 3000); // Redirect to login page after 3 seconds
       } else {
-        setServerError(result.error || "Registration failed. Please try again.");
+        setServerError(
+          result.error || "Registration failed. Please try again."
+        );
       }
     } catch (error) {
       setServerError("An unexpected error occurred. Please try again.");
@@ -55,7 +57,9 @@ export function RegisterForm() {
   if (registrationSuccess) {
     return (
       <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg text-center">
-        <h2 className="text-2xl font-bold text-green-600">Registration Successful!</h2>
+        <h2 className="text-2xl font-bold text-green-600">
+          Registration Successful!
+        </h2>
         <p className="text-gray-600 dark:text-gray-300">
           Your account has been created. Redirecting to login page...
         </p>

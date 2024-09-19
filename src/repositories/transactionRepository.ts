@@ -5,6 +5,8 @@ import { ITransaction, ITransactionBase } from "@/lib/models";
 import { formatDate } from "@/lib/utils";
 import { MemberRepository } from "./memberRepository";
 import { BookRepository } from "./bookRepository";
+import { VercelPgDatabase } from "drizzle-orm/vercel-postgres";
+import * as schema from "@/drizzle/schema";
 
 export interface DueTransactions {
   id: number;
@@ -19,7 +21,7 @@ export interface DueTransactions {
 }
 
 export class TransactionRepository {
-  constructor(private db: MySql2Database<Record<string, never>>) {}
+  constructor(private db: VercelPgDatabase<typeof schema>) {}
 
   bookRepo = new BookRepository(this.db);
   memberRepo = new MemberRepository(this.db);
@@ -42,7 +44,7 @@ export class TransactionRepository {
         const [result] = await txn
           .insert(transactions)
           .values(transaction)
-          .$returningId();
+          .returning(); //check here for create transaction error
 
         if (result) {
           const [insertedTransaction] = await txn
