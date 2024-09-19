@@ -24,12 +24,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { SearchForm } from "@/components/dashboard/search-form";
+import SearchInput from "@/components/dashboard/search-form";
 import Pagination from "@/components/dashboard/pagination";
 import { IMember } from "@/lib/models";
 import MemberForm from "@/components/admin-dashboard/member-form";
 import { useToast } from "@/hooks/use-toast";
-import { createMember, deleteMember, updateMember } from "@/actions/memberActions";
+import {
+  createMember,
+  deleteMember,
+  updateMember,
+} from "@/actions/memberActions";
 
 interface MemberDashboardProps {
   members: IMember[];
@@ -119,7 +123,7 @@ export default function MemberDashboard({
             Member Management
           </h1>
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <SearchForm />
+            <SearchInput placeholder="Search members..." />
             <Button onClick={handleAdd}>
               <Plus className="mr-2 h-4 w-4" /> Add Member
             </Button>
@@ -171,8 +175,8 @@ export default function MemberDashboard({
                             <AlertDialogDescription>
                               This action cannot be undone. This will
                               permanently delete the member &quot;
-                              {member.firstName} &quot;
-                              {member.lastName}&quot; from the database.
+                              {member.firstName} {member.lastName}&quot; from
+                              the database.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

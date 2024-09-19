@@ -31,7 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { SearchForm } from "@/components/dashboard/search-form";
+import SearchInput from "@/components/dashboard/search-form";
 import Pagination from "../dashboard/pagination";
 import { IBook } from "@/lib/models";
 import BookForm from "@/components/admin-dashboard/book-form";
@@ -188,9 +188,9 @@ export default function AdminDashboard({
                 ))}
               </SelectContent>
             </Select>
-            <SearchForm />
+            <SearchInput placeholder="Search books..." />
             <Button onClick={handleAdd} className="w-full sm:w-auto">
-              <Plus className="mr-2 h-4 w-4" /> Add Book
+              Add New Book
             </Button>
           </div>
         </div>
@@ -204,13 +204,13 @@ export default function AdminDashboard({
           <Table>
             <TableHeader>
               <TableRow>
-                {[ 
-                  "Title", 
-                  "Author", 
-                  "Genre", 
-                  "Isbn No", 
-                  "Available copies", 
-                  "Total Copies" 
+                {[
+                  "Title",
+                  "Author",
+                  "Genre",
+                  "Isbn No",
+                  "Available copies",
+                  "Total Copies",
                 ].map((header, index) => (
                   <TableHead
                     key={index}
@@ -266,8 +266,8 @@ export default function AdminDashboard({
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                               This action cannot be undone. This will
-                              permanently delete the book &quot;{book.title}&quot; from
-                              the database.
+                              permanently delete the book &quot;{book.title}
+                              &quot; from the database.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -286,11 +286,13 @@ export default function AdminDashboard({
               ))}
             </TableBody>
           </Table>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          <div className="mt-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -298,6 +300,7 @@ export default function AdminDashboard({
         <BookForm
           onSubmit={handleFormSubmit}
           onClose={closeForm}
+          book={selectedBook}
         />
       )}
     </div>

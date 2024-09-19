@@ -1,12 +1,12 @@
 "use server";
 
-import { MemberRepository } from "@/repositories/memberRepository";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
-
-const memberRepository = new MemberRepository(db);
+import { MemberRepository } from "@/repositories/memberRepository";
 
 export async function addFavorite(bookId: number) {
+  const memberRepository = new MemberRepository(db);
+
   const session = await auth();
   const member = await memberRepository.getMemberByEmail(session?.user?.email!);
   if (!member) {
@@ -18,6 +18,8 @@ export async function addFavorite(bookId: number) {
 }
 
 export async function removeFavorite(bookId: number) {
+  const memberRepository = new MemberRepository(db);
+
   const session = await auth();
   const member = await memberRepository.getMemberByEmail(session?.user?.email!);
   if (!member) {
@@ -29,6 +31,8 @@ export async function removeFavorite(bookId: number) {
 }
 
 export async function getFavorites() {
+  const memberRepository = new MemberRepository(db);
+
   const session = await auth();
   const member = await memberRepository.getMemberByEmail(session?.user?.email!);
   if (!member) {

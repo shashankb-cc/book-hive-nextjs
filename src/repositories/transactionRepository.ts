@@ -431,4 +431,35 @@ export class TransactionRepository {
       throw error;
     }
   }
+  async cancelTransaction(
+    id: number
+  ): Promise<{ success: boolean; message: string }> {
+    try {
+      return await this.db.transaction(async (tx) => {
+        const [transaction] = await tx
+          .select()
+          .from(transactions)
+          .where(eq(transactions.id, id))
+          .limit(1);
+
+        if (!transaction) {
+          return { success: false, message: "Transaction not found" };
+        }
+
+        if (transaction.status !== "pending") {
+          return {
+            success: false,
+            message: "Only pending transactions can be cancelled",
+          };
+        }
+
+        await tx.delete(transactions).where(eq(transactions.id, id));
+
+        return { success: true, message: "Transaction cancelled successfully" };
+      });
+    } catch (error) {
+      console.error("Error cancelling transaction:", error);
+      return { success: false, message: "Failed to cancel transaction" };
+    }
+  }
 }

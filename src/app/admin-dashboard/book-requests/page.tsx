@@ -1,6 +1,5 @@
 // app/admin/transactions/page.tsx
 import React from "react";
-import { getDrizzleDB } from "@/drizzle/drizzleDB";
 import { TransactionRepository } from "@/repositories/transactionRepository";
 import Transactions from "@/components/admin-dashboard/book-request";
 import { db } from "@/drizzle/db";

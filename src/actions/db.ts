@@ -1,9 +1,5 @@
-
 import { books } from "@/drizzle/schema";
 import { eq, like, or, sql, SQL } from "drizzle-orm";
-import { getDrizzleDB } from "@/drizzle/drizzleDB";
-
-export const db = getDrizzleDB();
 
 export function buildWhereConditions(
   search?: string,

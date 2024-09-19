@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { User } from "next-auth";
 import Google from "next-auth/providers/google";
 import { findUserByEmail } from "./actions/memberActions";
@@ -38,17 +38,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          const member = await findUserByEmail(email);
-          if (!member) return null;
-          const passwordsMatch = await bcrypt.compare(
-            password,
-            member.password
-          );
-          if (passwordsMatch) {
-            return mapMemberToUser(member);
+          console.log("email password", email, password);
+          try {
+            const member = await findUserByEmail(email);
+            console.log("member0", member);
+            if (!member) {
+              console.log("User not found");
+              return null;
+            }
+            const passwordsMatch = await bcrypt.compare(
+              password,
+              member.password
+            );
+            console.log("Passwords match:", passwordsMatch);
+            if (passwordsMatch) {
+              const user = mapMemberToUser(member);
+              console.log("Mapped user:", user);
+              return user;
+            } else {
+              console.log("Password does not match");
+              return null;
+            }
+          } catch (error) {
+            console.error("Error during authorization:", error);
+            throw new Error("An error occurred during authorization");
           }
         }
-        console.log("Invalid Credentials Please Recheck ");
+        console.log("Invalid credentials format");
         return null;
       },
     }),

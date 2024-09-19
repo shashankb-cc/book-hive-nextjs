@@ -22,13 +22,13 @@ export class MemberRepository {
 
   async createMember(formData: FormData): Promise<string | null> {
     try {
+      console.log("-----------------------------------------", formData);
       const firstName = formData.get("firstName") as string;
       const lastName = formData.get("lastName") as string;
       const email = formData.get("email") as string;
-      const phone = formData.get("phoneNumber") as string;
-      const role = formData.get("role") as "librarian" | "member";
+      const phone = formData.get("phone") as string;
+      const password = formData.get("password") as string;
 
-      const password = firstName + phone;
       const hashedPassword = await bcrypt.hash(password, 12);
       console.log("formdata", formData);
       await this.db.insert(members).values({
@@ -37,7 +37,7 @@ export class MemberRepository {
         email,
         phoneNumber: phone,
         password: hashedPassword,
-        role:"member",
+        role: "librarian",
       });
 
       return null;

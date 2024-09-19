@@ -4,7 +4,7 @@ import ActiveTransactions from "@/components/admin-dashboard/active-transactions
 import { getActiveTransactions } from "@/actions/transactionActions";
 
 export default async function ActiveTransactionsPage() {
-  // const activeTransactions = await getActiveTransactions();
+  const activeTransactions = await getActiveTransactions();
 
   return (
     <div className="container mx-auto p-6">
@@ -15,7 +15,7 @@ export default async function ActiveTransactionsPage() {
           </h1>
         </div>
       </header>
-      {/* <ActiveTransactions transactions={activeTransactions} /> */}
+      <ActiveTransactions transactions={activeTransactions} />
     </div>
   );
 }

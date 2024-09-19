@@ -26,7 +26,6 @@ export default async function DashboardPage({
   return (
     <Dashboard
       books={books}
-      recentlyAddedBooks={recentlyAddedBooks}
       currentPage={page}
       totalPages={totalPages}
       genres={genres}

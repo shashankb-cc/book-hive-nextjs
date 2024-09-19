@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cancelBookRequest } from "@/actions/transactionActions";
 
 interface BookRequest {
   id: number;
@@ -35,8 +36,9 @@ export default function CollectionClient({
   bookRequests,
 }: CollectionClientProps) {
   const [filter, setFilter] = useState<string>("all");
+  const [requests, setRequests] = useState(bookRequests);
 
-  const filteredRequests = bookRequests.filter(
+  const filteredRequests = requests.filter(
     (request) => filter === "all" || request.status === filter
   );
 
@@ -44,19 +46,29 @@ export default function CollectionClient({
     pending: <Clock className="w-4 h-4" />,
     returned: <CheckCircle className="w-4 h-4" />,
     rejected: <XCircle className="w-4 h-4" />,
-    issued: <XCircle className="w-4 h-4" />,
+    issued: <BookOpen className="w-4 h-4" />,
   };
 
   const statusColor = {
     pending: "text-yellow-500",
     returned: "text-green-500",
     rejected: "text-red-500",
-    issued: "text-green-500",
+    issued: "text-blue-500",
+  };
+
+  const handleCancel = async (id: number) => {
+    const result = await cancelBookRequest(id);
+    if (result.success) {
+      setRequests(requests.filter(request => request.id !== id));
+    } else {
+      // Handle error (e.g., show an error message)
+      console.error(result.message);
+    }
   };
 
   return (
     <div>
-      {bookRequests.length > 0 ? (
+      {requests.length > 0 ? (
         <>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h2 className="text-2xl font-semibold">Book Requests</h2>
@@ -67,8 +79,9 @@ export default function CollectionClient({
               <SelectContent>
                 <SelectItem value="all">All Requests</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
+                <SelectItem value="issued">Issued</SelectItem>
                 <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="returned">Returned</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -104,10 +117,21 @@ export default function CollectionClient({
                     </CardDescription>
                   </CardHeader>
                   <CardFooter className="pt-0">
-                    <Button variant="outline" className="w-full">
-                      <BookOpen className="w-4 h-4 mr-2" />
-                      View Details
-                    </Button>
+                    {request.status === "pending" ? (
+                      <Button 
+                        variant="destructive" 
+                        className="w-full"
+                        onClick={() => handleCancel(request.id)}
+                      >
+                        <XCircle className="w-4 h-4 mr-2" />
+                        Cancel Request
+                      </Button>
+                    ) : (
+                      <Button variant="outline" className="w-full">
+                        <BookOpen className="w-4 h-4 mr-2" />
+                        View Details
+                      </Button>
+                    )}
                   </CardFooter>
                 </Card>
               ))}
