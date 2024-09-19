@@ -37,7 +37,7 @@ export class MemberRepository {
         email,
         phoneNumber: phone,
         password: hashedPassword,
-        role,
+        role:"member",
       });
 
       return null;

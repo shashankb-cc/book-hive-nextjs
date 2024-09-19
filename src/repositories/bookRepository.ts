@@ -86,7 +86,7 @@ export class BookRepository {
             folder: "bookCover",
             resource_type: "auto",
           },
-          (error, result) => {
+          (error: any, result: any) => {
             if (error) {
               reject(new Error("Failed to upload image"));
             } else {
