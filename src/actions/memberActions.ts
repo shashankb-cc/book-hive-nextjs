@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { getFavorites } from "./favoriteActions";
 import { db } from "@/drizzle/db";
 import { IMember } from "@/lib/models";
+import { getTranslations } from "next-intl/server";
 
 export async function getMemberData(searchParams: {
   [key: string]: string | string[] | undefined;
@@ -135,7 +136,7 @@ export async function getProfileData() {
   }
 }
 
-export async function updateUserProfile(formData: FormData) {
+export async function updateUserProfile(formData: FormData, locale: string) {
   try {
     const session = await auth();
     if (!session?.user?.email) {
@@ -158,7 +159,8 @@ export async function updateUserProfile(formData: FormData) {
 
 export async function changePassword(
   currentPassword: string,
-  newPassword: string
+  newPassword: string,
+  locale: string
 ) {
   try {
     const memberRepository = new MemberRepository(db);

@@ -12,9 +12,12 @@ import { Mail, Lock, User, Phone, Loader2 } from "lucide-react";
 import { registerSchema, type RegisterFormData } from "@/lib/zodSchema";
 import { useState } from "react";
 import { createMember } from "@/actions/memberActions";
+import { useLocale, useTranslations } from "next-intl";
 
 export function RegisterForm() {
+  const locale = useLocale();
   const router = useRouter();
+  const t = useTranslations("RegisterPage");
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
@@ -40,15 +43,13 @@ export function RegisterForm() {
       if (result.message) {
         setRegistrationSuccess(true);
         setTimeout(() => {
-          router.push("/login");
-        }, 3000); // Redirect to login page after 3 seconds
+          router.push(`/${locale}/login`);
+        }, 3000);
       } else {
-        setServerError(
-          result.error || "Registration failed. Please try again."
-        );
+        setServerError(result.error || t("registrationFailed"));
       }
     } catch (error) {
-      setServerError("An unexpected error occurred. Please try again.");
+      setServerError(t("unexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -58,10 +59,10 @@ export function RegisterForm() {
     return (
       <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg text-center">
         <h2 className="text-2xl font-bold text-green-600">
-          Registration Successful!
+          {t("successTitle")}
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
-          Your account has been created. Redirecting to login page...
+          {t("successMessage")}
         </p>
         <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
       </div>
@@ -71,15 +72,13 @@ export function RegisterForm() {
   return (
     <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
       <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Create an Account</h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          Sign up to join BookHive
-        </p>
+        <h1 className="text-3xl font-bold">{t("title")}</h1>
+        <p className="text-gray-500 dark:text-gray-400">{t("subtitle")}</p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
+            <Label htmlFor="firstName">{t("firstName")}</Label>
             <div className="relative">
               <User
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
@@ -99,7 +98,7 @@ export function RegisterForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
+            <Label htmlFor="lastName">{t("lastName")}</Label>
             <div className="relative">
               <User
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
@@ -120,7 +119,7 @@ export function RegisterForm() {
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t("email")}</Label>
           <div className="relative">
             <Mail
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
@@ -141,7 +140,7 @@ export function RegisterForm() {
           )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number</Label>
+          <Label htmlFor="phone">{t("phone")}</Label>
           <div className="relative">
             <Phone
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
@@ -162,7 +161,7 @@ export function RegisterForm() {
           )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("password")}</Label>
           <div className="relative">
             <Lock
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
@@ -187,10 +186,10 @@ export function RegisterForm() {
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating Account...
+              {t("creatingAccount")}
             </>
           ) : (
-            "Create Account"
+            t("createAccount")
           )}
         </Button>
       </form>
@@ -200,26 +199,21 @@ export function RegisterForm() {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-white dark:bg-gray-800 px-2 text-gray-500 dark:text-gray-400">
-            Or continue with
+            {t("or")}
           </span>
         </div>
       </div>
-      <Button
-        variant="outline"
-        type="button"
-        className="w-full"
-        // onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-      >
+      <Button variant="outline" type="button" className="w-full">
         <Icons.google className="mr-2 h-4 w-4" />
-        Google
+        {t("google")}
       </Button>
       <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-        Already have an account?{" "}
+        {t("haveAccount")}{" "}
         <Link
           className="font-medium text-primary hover:underline"
-          href="/login"
+          href={`/${locale}/login`}
         >
-          Log in
+          {t("logIn")}
         </Link>
       </p>
     </div>

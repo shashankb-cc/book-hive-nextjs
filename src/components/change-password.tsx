@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { changePassword } from "@/actions/memberActions";
+import { useLocale } from "next-intl";
 
 const formSchema = z
   .object({
@@ -34,6 +35,7 @@ const formSchema = z
   });
 
 export function ChangePassword() {
+  const locale = useLocale();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -49,7 +51,7 @@ export function ChangePassword() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      await changePassword(values.currentPassword, values.newPassword);
+      await changePassword(values.currentPassword, values.newPassword, locale);
       toast({
         title: "Password changed",
         description: "Your password has been successfully changed.",

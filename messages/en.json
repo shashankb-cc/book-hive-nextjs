@@ -1,0 +1,111 @@
+{
+  "Common": {
+    "selectLanguage": "Select Language"
+  },
+  "LoginPage": {
+    "title": "Login to BookHive",
+    "subtitle": "Enter your credentials to access your account",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "signingIn": "Signing In...",
+    "or": "Or continue with",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
+  },
+  "RegisterPage": {
+    "title": "Create an Account",
+    "subtitle": "Sign up to join BookHive",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "password": "Password",
+    "createAccount": "Create Account",
+    "creatingAccount": "Creating Account...",
+    "or": "Or continue with",
+    "google": "Google",
+    "haveAccount": "Already have an account?",
+    "logIn": "Log in",
+    "successTitle": "Registration Successful!",
+    "successMessage": "Your account has been created. Redirecting to login page..."
+  },
+  "ProfilePage": {
+    "greeting": "Welcome, {name}",
+    "role": "Role: {role}",
+    "readingMilestone": "70% to next reading milestone",
+    "readingStats": "Reading Stats",
+    "booksRead": "Books Read",
+    "favorites": "Favorites",
+    "memberSince": "Member Since",
+    "profileInformation": "Profile Information",
+    "save": "Save",
+    "edit": "Edit",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "borrowedBooks": "Borrowed Books",
+    "viewLoans": "View your current loans",
+    "readingHistory": "Reading History",
+    "browseReads": "Browse your past reads",
+    "manageFavorites": "Manage your favorite books",
+    "changePassword": "Change Password",
+    "updatePassword": "Update your password",
+    "changePasswordDescription": "Enter your current password and a new password to update your account security.",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "logOut": "Log out",
+    "error": "Error",
+    "fetchProfileError": "Failed to fetch profile data",
+    "userDataUnavailable": "User data is not available",
+    "success": "Success",
+    "passwordMismatch": "New passwords do not match",
+    "loading": "Loading...",
+    "profileLoadError": "Error: Unable to load user profile"
+  },
+  "HomePage": {
+    "header": {
+      "title": "BookHive",
+      "nav": {
+        "home": "Home",
+        "catalog": "Catalog",
+        "myBooks": "My Books",
+        "about": "About"
+      },
+      "buttons": {
+        "signUp": "Sign Up",
+        "logIn": "Log In"
+      },
+      "mobileMenu": "Toggle navigation menu"
+    },
+    "hero": {
+      "title": "Welcome to BookHive",
+      "subtitle": "Your digital library for borrowing and returning books. Explore our vast collection and dive into new worlds.",
+      "searchPlaceholder": "Search for books...",
+      "searchButton": "Search"
+    },
+    "features": {
+      "title": "Our Features",
+      "vastCollection": {
+        "title": "Vast Collection",
+        "description": "Access thousands of books across various genres and topics."
+      },
+      "easyBorrowing": {
+        "title": "Easy Borrowing",
+        "description": "Borrow and return books with just a few clicks."
+      },
+      "personalBookshelf": {
+        "title": "Personal Bookshelf",
+        "description": "Keep track of your borrowed books and reading history."
+      }
+    },
+    "footer": {
+      "copyright": "© 2023 BookHive. All rights reserved.",
+      "terms": "Terms of Service",
+      "privacy": "Privacy"
+    }
+  }
+}
