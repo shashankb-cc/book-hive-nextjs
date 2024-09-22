@@ -149,7 +149,7 @@ export class TransactionRepository {
   }> {
     const today = formatDate(new Date());
     const todaysDate = today.split(",");
-    const trimmedDate = todaysDate[1].trim();
+    const trimmedDate = todaysDate[1].trim(); 
 
     try {
       const allIssuedTransactions = await this.db

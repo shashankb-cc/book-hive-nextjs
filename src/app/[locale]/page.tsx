@@ -12,59 +12,61 @@ import {
   BookIcon,
   LibraryIcon,
   MenuIcon,
-  XIcon,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function Component() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const t = useTranslations("HomePage");
+  const locale = useLocale();
 
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b">
         <Link className="flex items-center justify-center" href="#">
           <BookOpenIcon className="h-6 w-6" />
-          <span className="ml-2 text-lg font-bold">BookHive</span>
+          <span className="ml-2 text-lg font-bold">{t("header.title")}</span>
         </Link>
         <nav className="ml-auto hidden md:flex gap-4 sm:gap-6">
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
-            Home
+            {t("header.nav.home")}
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
-            Catalog
+            {t("header.nav.catalog")}
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
-            My Books
+            {t("header.nav.myBooks")}
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
-            About
+            {t("header.nav.about")}
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <Link href="/register">
+          <Link href={`/${locale}/register`}>
             <Button variant="ghost" size="sm" className="hidden sm:flex">
-              Sign Up
+              {t("header.buttons.signUp")}
             </Button>
           </Link>
-          <Link href="/login">
-            <Button size="sm">Log In</Button>
+          <Link href={`/${locale}/login`}>
+            <Button size="sm">{t("header.buttons.logIn")}</Button>
           </Link>
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
                 <MenuIcon className="h-6 w-6" />
-                <span className="sr-only">Toggle navigation menu</span>
+                <span className="sr-only">{t("header.mobileMenu")}</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
@@ -76,7 +78,9 @@ export default function Component() {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <BookOpenIcon className="h-6 w-6" />
-                    <span className="ml-2 text-lg font-bold">BookHive</span>
+                    <span className="ml-2 text-lg font-bold">
+                      {t("header.title")}
+                    </span>
                   </Link>
                 </div>
                 <nav className="flex flex-col gap-4">
@@ -85,46 +89,46 @@ export default function Component() {
                     href="#"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Home
+                    {t("header.nav.home")}
                   </Link>
                   <Link
                     className="text-lg font-medium hover:text-primary transition-colors"
                     href="#"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Catalog
+                    {t("header.nav.catalog")}
                   </Link>
                   <Link
                     className="text-lg font-medium hover:text-primary transition-colors"
                     href="#"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    My Books
+                    {t("header.nav.myBooks")}
                   </Link>
                   <Link
                     className="text-lg font-medium hover:text-primary transition-colors"
                     href="#"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    About
+                    {t("header.nav.about")}
                   </Link>
                 </nav>
                 <div className="mt-auto">
-                  <Link href="/register">
+                  <Link href={`/${locale}/register`}>
                     <Button
                       className="w-full mb-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Sign up
+                      {t("header.buttons.signUp")}
                     </Button>
                   </Link>
-                  <Link href="/login">
+                  <Link href={`/${locale}/login`}>
                     <Button
                       variant="outline"
                       className="w-full"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Log In
+                      {t("header.buttons.logIn")}
                     </Button>
                   </Link>
                 </div>
@@ -139,23 +143,24 @@ export default function Component() {
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Welcome to BookHive
+                  {t("hero.title")}
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Your digital library for borrowing and returning books.
-                  Explore our vast collection and dive into new worlds.
+                  {t("hero.subtitle")}
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
                 <form className="flex space-x-2">
                   <Input
                     className="max-w-lg flex-1"
-                    placeholder="Search for books..."
+                    placeholder={t("hero.searchPlaceholder")}
                     type="search"
                   />
                   <Button type="submit">
                     <SearchIcon className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">Search</span>
+                    <span className="hidden sm:inline">
+                      {t("hero.searchButton")}
+                    </span>
                   </Button>
                 </form>
               </div>
@@ -165,28 +170,34 @@ export default function Component() {
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
           <div className="container px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-4">
-              Our Features
+              {t("features.title")}
             </h2>
             <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
               <div className="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
                 <BookIcon className="h-8 w-8 mb-2" />
-                <h3 className="text-xl font-bold">Vast Collection</h3>
+                <h3 className="text-xl font-bold">
+                  {t("features.vastCollection.title")}
+                </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                  Access thousands of books across various genres and topics.
+                  {t("features.vastCollection.description")}
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
                 <UserIcon className="h-8 w-8 mb-2" />
-                <h3 className="text-xl font-bold">Easy Borrowing</h3>
+                <h3 className="text-xl font-bold">
+                  {t("features.easyBorrowing.title")}
+                </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                  Borrow and return books with just a few clicks.
+                  {t("features.easyBorrowing.description")}
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
                 <LibraryIcon className="h-8 w-8 mb-2" />
-                <h3 className="text-xl font-bold">Personal Bookshelf</h3>
+                <h3 className="text-xl font-bold">
+                  {t("features.personalBookshelf.title")}
+                </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                  Keep track of your borrowed books and reading history.
+                  {t("features.personalBookshelf.description")}
                 </p>
               </div>
             </div>
@@ -195,14 +206,14 @@ export default function Component() {
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2023 BookHive. All rights reserved.
+          {t("footer.copyright")}
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
+            {t("footer.terms")}
           </Link>
           <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
+            {t("footer.privacy")}
           </Link>
         </nav>
       </footer>

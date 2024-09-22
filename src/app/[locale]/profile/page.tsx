@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { User, Book, Clock, Heart, LogOut, Key } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -21,7 +22,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { handleSignOut } from "@/actions/authActions";
-import { changePassword, getProfileData, updateUserProfile } from "@/actions/memberActions";
+import {
+  changePassword,
+  getProfileData,
+  updateUserProfile,
+} from "@/actions/memberActions";
 
 interface FavoriteBook {
   id: number;
@@ -41,7 +46,15 @@ interface UserProfile {
   favorites: FavoriteBook[];
 }
 
-export default function ProfilePage() {
+type ProfilePageProps = {
+  params: {
+    locale: string;
+  };
+};
+
+export default function ProfilePage({ params: { locale } }: ProfilePageProps) {
+  const t = useTranslations("ProfilePage");
+
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,15 +71,15 @@ export default function ProfilePage() {
         setUser(result.data as UserProfile);
       } else {
         toast({
-          title: "Error",
-          description: result.error || "Failed to fetch profile data",
+          title: t("error"),
+          description: result.error || t("fetchProfileError"),
           variant: "destructive",
         });
       }
       setIsLoading(false);
     }
     fetchProfileData();
-  }, [toast]);
+  }, [toast, t]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (user) {
@@ -80,8 +93,8 @@ export default function ProfilePage() {
 
     if (!user) {
       toast({
-        title: "Error",
-        description: "User data is not available",
+        title: t("error"),
+        description: t("userDataUnavailable"),
         variant: "destructive",
       });
       setIsLoading(false);
@@ -93,17 +106,17 @@ export default function ProfilePage() {
     formData.append("lastName", user.lastName);
     formData.append("phoneNumber", user.phoneNumber);
 
-    const result = await updateUserProfile(formData);
+    const result = await updateUserProfile(formData, locale);
     setIsLoading(false);
     if ("message" in result) {
       toast({
-        title: "Success",
+        title: t("success"),
         description: result.message,
       });
       setIsEditing(false);
     } else {
       toast({
-        title: "Error",
+        title: t("error"),
         description: result.error,
         variant: "destructive",
       });
@@ -117,17 +130,17 @@ export default function ProfilePage() {
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
       toast({
-        title: "Error",
-        description: "New passwords do not match",
+        title: t("error"),
+        description: t("passwordMismatch"),
         variant: "destructive",
       });
       return;
     }
 
-    const result = await changePassword(currentPassword, newPassword);
+    const result = await changePassword(currentPassword, newPassword, locale);
     if ("message" in result) {
       toast({
-        title: "Success",
+        title: t("success"),
         description: result.message,
       });
       setCurrentPassword("");
@@ -135,7 +148,7 @@ export default function ProfilePage() {
       setConfirmPassword("");
     } else {
       toast({
-        title: "Error",
+        title: t("error"),
         description: result.error,
         variant: "destructive",
       });
@@ -143,11 +156,11 @@ export default function ProfilePage() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t("loading")}</div>;
   }
 
   if (!user) {
-    return <div>Error: Unable to load user profile</div>;
+    return <div>{t("profileLoadError")}</div>;
   }
 
   return (
@@ -167,32 +180,40 @@ export default function ProfilePage() {
                       <User className="h-12 w-12 sm:h-16 sm:w-16" />
                     </AvatarFallback>
                   </Avatar>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-2">{`${user.firstName} ${user.lastName}`}</h2>
-                  <p className="text-sm opacity-80 mb-4">{user.role}</p>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-2">
+                    {t("greeting", {
+                      name: `${user.firstName} ${user.lastName}`,
+                    })}
+                  </h2>
+                  <p className="text-sm opacity-80 mb-4">
+                    {t("role", { role: user.role })}
+                  </p>
                   <Progress value={70} className="w-full mb-2" />
-                  <p className="text-sm">70% to next reading milestone</p>
+                  <p className="text-sm">{t("readingMilestone")}</p>
                 </div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Reading Stats</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  {t("readingStats")}
+                </h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="flex items-center">
-                      <Book className="mr-2 h-4 w-4" /> Books Read
+                      <Book className="mr-2 h-4 w-4" /> {t("booksRead")}
                     </span>
                     <span className="font-bold">0</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="flex items-center">
-                      <Heart className="mr-2 h-4 w-4" /> Favorites
+                      <Heart className="mr-2 h-4 w-4" /> {t("favorites")}
                     </span>
                     <span className="font-bold">{user.favorites.length}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="flex items-center">
-                      <Clock className="mr-2 h-4 w-4" /> Member Since
+                      <Clock className="mr-2 h-4 w-4" /> {t("memberSince")}
                     </span>
                     <span className="font-bold">N/A</span>
                   </div>
@@ -206,20 +227,20 @@ export default function ProfilePage() {
                 <form onSubmit={handleSubmit}>
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl sm:text-2xl font-bold">
-                      Profile Information
+                      {t("profileInformation")}
                     </h3>
                     <Button
                       type={isEditing ? "button" : "submit"}
                       onClick={handleEditToggle}
                       variant="outline"
                     >
-                      {isEditing ? "Save" : "Edit"}
+                      {isEditing ? t("save") : t("edit")}
                     </Button>
                   </div>
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="firstName">First Name</Label>
+                        <Label htmlFor="firstName">{t("firstName")}</Label>
                         <Input
                           id="firstName"
                           name="firstName"
@@ -229,7 +250,7 @@ export default function ProfilePage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="lastName">Last Name</Label>
+                        <Label htmlFor="lastName">{t("lastName")}</Label>
                         <Input
                           id="lastName"
                           name="lastName"
@@ -240,7 +261,7 @@ export default function ProfilePage() {
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">{t("email")}</Label>
                       <Input
                         id="email"
                         name="email"
@@ -250,7 +271,7 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="phoneNumber">Phone Number</Label>
+                      <Label htmlFor="phoneNumber">{t("phoneNumber")}</Label>
                       <Input
                         id="phoneNumber"
                         name="phoneNumber"
@@ -269,9 +290,9 @@ export default function ProfilePage() {
                   <CardContent className="p-4 flex items-center h-full">
                     <Book className="h-8 w-8 mr-4 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold">Borrowed Books</h4>
+                      <h4 className="font-semibold">{t("borrowedBooks")}</h4>
                       <p className="text-sm text-muted-foreground">
-                        View your current loans
+                        {t("viewLoans")}
                       </p>
                     </div>
                   </CardContent>
@@ -282,9 +303,9 @@ export default function ProfilePage() {
                   <CardContent className="p-4 flex items-center h-full">
                     <Clock className="h-8 w-8 mr-4 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold">Reading History</h4>
+                      <h4 className="font-semibold">{t("readingHistory")}</h4>
                       <p className="text-sm text-muted-foreground">
-                        Browse your past reads
+                        {t("browseReads")}
                       </p>
                     </div>
                   </CardContent>
@@ -295,9 +316,9 @@ export default function ProfilePage() {
                   <CardContent className="p-4 flex items-center h-full">
                     <Heart className="h-8 w-8 mr-4 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold">Favorites</h4>
+                      <h4 className="font-semibold">{t("favorites")}</h4>
                       <p className="text-sm text-muted-foreground">
-                        Manage your favorite books
+                        {t("manageFavorites")}
                       </p>
                     </div>
                   </CardContent>
@@ -309,9 +330,9 @@ export default function ProfilePage() {
                     <CardContent className="p-4 flex items-center h-full">
                       <Key className="h-8 w-8 mr-4 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold">Change Password</h4>
+                        <h4 className="font-semibold">{t("changePassword")}</h4>
                         <p className="text-sm text-muted-foreground">
-                          Update your password
+                          {t("updatePassword")}
                         </p>
                       </div>
                     </CardContent>
@@ -319,15 +340,16 @@ export default function ProfilePage() {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Change Password</DialogTitle>
+                    <DialogTitle>{t("changePassword")}</DialogTitle>
                     <DialogDescription>
-                      Enter your current password and a new password to update
-                      your account security.
+                      {t("changePasswordDescription")}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
                     <div className="space-y-2">
-                      <Label htmlFor="current-password">Current Password</Label>
+                      <Label htmlFor="current-password">
+                        {t("currentPassword")}
+                      </Label>
                       <Input
                         id="current-password"
                         type="password"
@@ -336,7 +358,7 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="new-password">New Password</Label>
+                      <Label htmlFor="new-password">{t("newPassword")}</Label>
                       <Input
                         id="new-password"
                         type="password"
@@ -346,7 +368,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="confirm-password">
-                        Confirm New Password
+                        {t("confirmNewPassword")}
                       </Label>
                       <Input
                         id="confirm-password"
@@ -358,7 +380,7 @@ export default function ProfilePage() {
                   </div>
                   <DialogFooter>
                     <Button onClick={handlePasswordChange}>
-                      Change Password
+                      {t("changePassword")}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -369,7 +391,7 @@ export default function ProfilePage() {
         <div className="mt-8 text-center">
           <form action={handleSignOut}>
             <Button variant="destructive" className="w-1/8" type="submit">
-              <LogOut className="mr-2 h-4 w-4" /> Log out
+              <LogOut className="mr-2 h-4 w-4" /> {t("logOut")}
             </Button>
           </form>
         </div>
