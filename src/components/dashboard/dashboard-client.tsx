@@ -27,6 +27,7 @@ import {
   removeFavorite,
 } from "@/actions/favoriteActions";
 import { borrowBook } from "@/actions/transactionActions";
+import { useTranslations } from "next-intl";
 
 interface DashboardProps {
   books: IBook[];
@@ -43,6 +44,7 @@ export default function Dashboard({
   genres,
   selectedGenre,
 }: DashboardProps) {
+  const t = useTranslations("Dashboard");
   const [selectedBook, setSelectedBook] = useState<IBook | null>(null);
   const [borrowingBook, setBorrowingBook] = useState<IBook | null>(null);
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
@@ -88,7 +90,7 @@ export default function Dashboard({
     if (book.availableNumberOfCopies > 0) {
       setBorrowingBook(book);
     } else {
-      alert("This book is currently unavailable.");
+      alert(t("unavailable"));
     }
   };
 
@@ -98,7 +100,7 @@ export default function Dashboard({
         const result = await borrowBook(borrowingBook.id);
         if (result.success) {
           toast({
-            title: "Success",
+            title: t("success", { ns: "Common" }),
             description: result.message,
             className: "bg-green-400 text-white",
           });
@@ -106,14 +108,14 @@ export default function Dashboard({
           router.refresh();
         } else {
           toast({
-            title: "Error",
+            title: t("error", { ns: "Common" }),
             description: result.message,
             className: "bg-red-400 text-white",
           });
         }
       } catch (error) {
         console.error("Error borrowing book:", error);
-        alert("Failed to borrow book. Please try again.");
+        alert(t("borrowError"));
       }
     }
   };
@@ -128,24 +130,24 @@ export default function Dashboard({
           return newFavorites;
         });
         toast({
-          title: "Removed from favorites",
-          description: "The book has been removed from your favorites.",
+          title: t("removedFromFavorites"),
+          description: t("removedFromFavoritesDescription"),
           className: "bg-blue-400 text-white",
         });
       } else {
         await addFavorite(bookId);
         setFavorites((prev) => new Set(prev).add(bookId));
         toast({
-          title: "Added to favorites",
-          description: "The book has been added to your favorites.",
+          title: t("addedToFavorites"),
+          description: t("addedToFavoritesDescription"),
           className: "bg-green-400 text-white",
         });
       }
     } catch (error) {
       console.error("Error toggling favorite:", error);
       toast({
-        title: "Error",
-        description: "Failed to update favorites. Please try again.",
+        title: t("error", { ns: "Common" }),
+        description: t("favoriteToggleError"),
         className: "bg-red-400 text-white",
       });
     }
@@ -153,11 +155,11 @@ export default function Dashboard({
 
   return (
     <>
-      <header className="bg-white  dark:bg-gray-800 shadow mb-6">
+      <header className="bg-white dark:bg-gray-800 shadow mb-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between">
           <div className="flex items-center mb-4 sm:mb-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Books Dashboard
+              {t("title")}
             </h1>
           </div>
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
@@ -166,10 +168,10 @@ export default function Dashboard({
               value={selectedGenre || "all"}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Genre" />
+                <SelectValue placeholder={t("selectGenre")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Genres</SelectItem>
+                <SelectItem value="all">{t("allGenres")}</SelectItem>
                 {genres.map((genre) => (
                   <SelectItem key={genre} value={genre}>
                     {genre}
@@ -177,7 +179,7 @@ export default function Dashboard({
                 ))}
               </SelectContent>
             </Select>
-            <SearchInput placeholder="Search books..." />
+            <SearchInput placeholder={t("searchPlaceholder")} />
             <UserDropdown />
           </div>
         </div>
@@ -186,7 +188,7 @@ export default function Dashboard({
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold mb-4 sm:mb-0">
-            Featured Books
+            {t("featuredBooks")}
           </h2>
           <Pagination
             currentPage={currentPage}
@@ -251,8 +253,8 @@ export default function Dashboard({
                   disabled={book.availableNumberOfCopies === 0}
                 >
                   {book.availableNumberOfCopies > 0
-                    ? "Borrow Book"
-                    : "Unavailable"}
+                    ? t("borrowBook")
+                    : t("unavailable")}
                 </Button>
               </CardFooter>
             </Card>

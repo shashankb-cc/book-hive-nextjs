@@ -11,18 +11,25 @@ import {
 } from "lucide-react";
 import SideNav from "@/components/side-nav";
 import * as LucideIcons from "lucide-react";
+import { useLocale } from "next-intl";
 
 export function UserNavBar() {
+  const locale = useLocale();
+
   const userNavItems: {
     name: string;
     href: string;
     icon: keyof typeof LucideIcons;
   }[] = [
-    { name: "Home", href: "/dashboard", icon: "Home" },
-    { name: "My Books", href: "/collection", icon: "BookOpen" },
-    { name: "Borrowing History", href: "/transactions", icon: "History" },
-    { name: "Favorites", href: "/favorites", icon: "Heart" },
-    { name: "Due Soon", href: "/due-soon", icon: "Clock" },
+    { name: "Home", href: `/${locale}/dashboard`, icon: "Home" }, //`/${locale}/`
+    { name: "My Books", href: `/${locale}/collection`, icon: "BookOpen" },
+    {
+      name: "Borrowing History",
+      href: `/${locale}/transactions`,
+      icon: "History",
+    },
+    { name: "Favorites", href: `/${locale}/favorites`, icon: "Heart" },
+    { name: "Due Soon", href: `/${locale}/due-soon`, icon: "Clock" },
   ];
 
   return <SideNav title="BookHive" navItems={userNavItems} />;
