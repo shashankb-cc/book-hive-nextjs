@@ -2,7 +2,11 @@
   "Common": {
     "selectLanguage": "Select Language",
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "selectGenre": "Select Genre",
+    "allGenres": "All Genres",
+    "title": "BookHive",
+    "searchPlaceholder": "Search for books..."
   },
   "LoginPage": {
     "title": "Login to BookHive",
@@ -191,7 +195,8 @@
     "status": {
       "returned": "Returned",
       "overdue": "Overdue",
-      "borrowed": "Borrowed"
+      "borrowed": "Borrowed",
+      "issued": "Issued"
     }
   },
   "UserNavBar": {
