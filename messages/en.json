@@ -107,5 +107,46 @@
       "terms": "Terms of Service",
       "privacy": "Privacy"
     }
+  },
+
+  "Dashboard": {
+    "title": "Books Dashboard",
+    "featuredBooks": "Featured Books",
+    "searchPlaceholder": "Search books...",
+    "selectGenre": "Select Genre",
+    "allGenres": "All Genres",
+    "borrowBook": "Borrow Book",
+    "unavailable": "Unavailable"
+  },
+  "Collection": {
+    "title": "My Book Collection",
+    "bookRequests": "Book Requests",
+    "filterByStatus": "Filter by status",
+    "allRequests": "All Requests",
+    "noRequests": "No book requests found for the selected filter.",
+    "noRequestsYet": "You haven't made any book requests yet.",
+    "cancelRequest": "Cancel Request",
+    "viewDetails": "View Details"
+  },
+  "DueSoon": {
+    "title": "Books Due Soon",
+    "overdueTitle": "Overdue Books",
+    "showDueSoon": "Show Due Soon",
+    "showOverdue": "Show Overdue",
+    "noDueSoon": "No Books Due Soon",
+    "noOverdue": "No Overdue Books",
+    "noDueSoonMessage": "You don't have any books due in the next 7 days.",
+    "noOverdueMessage": "Great job! You don't have any overdue books."
+  },
+  "Favorites": {
+    "title": "My Favorite Books",
+    "noFavorites": "No Favorite Books Yet",
+    "noFavoritesMessage": "Start adding books to your favorites to see them here!"
+  },
+  "Transactions": {
+    "title": "Transaction History",
+    "noTransactions": "No Transactions Yet",
+    "noTransactionsMessage": "You haven't borrowed any books yet. Start exploring our collection and make your first borrow!",
+    "exploreBooks": "Explore Books"
   }
 }

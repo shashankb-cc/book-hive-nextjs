@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cancelBookRequest } from "@/actions/transactionActions";
+import { useTranslations } from "next-intl";
 
 interface BookRequest {
   id: number;
@@ -35,6 +36,7 @@ interface CollectionClientProps {
 export default function CollectionClient({
   bookRequests,
 }: CollectionClientProps) {
+  const t = useTranslations("Collection");
   const [filter, setFilter] = useState<string>("all");
   const [requests, setRequests] = useState(bookRequests);
 
@@ -59,7 +61,7 @@ export default function CollectionClient({
   const handleCancel = async (id: number) => {
     const result = await cancelBookRequest(id);
     if (result.success) {
-      setRequests(requests.filter(request => request.id !== id));
+      setRequests(requests.filter((request) => request.id !== id));
     } else {
       // Handle error (e.g., show an error message)
       console.error(result.message);
@@ -71,17 +73,17 @@ export default function CollectionClient({
       {requests.length > 0 ? (
         <>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <h2 className="text-2xl font-semibold">Book Requests</h2>
+            <h2 className="text-2xl font-semibold">{t("bookRequests")}</h2>
             <Select value={filter} onValueChange={setFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
+                <SelectValue placeholder={t("filterByStatus")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Requests</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="issued">Issued</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-                <SelectItem value="returned">Returned</SelectItem>
+                <SelectItem value="all">{t("allRequests")}</SelectItem>
+                <SelectItem value="pending">{t("pending")}</SelectItem>
+                <SelectItem value="issued">{t("issued")}</SelectItem>
+                <SelectItem value="rejected">{t("rejected")}</SelectItem>
+                <SelectItem value="returned">{t("returned")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -89,7 +91,7 @@ export default function CollectionClient({
             <Card>
               <CardContent className="pt-6">
                 <p className="text-center text-muted-foreground">
-                  No book requests found for the selected filter.
+                  {t("noRequests")}
                 </p>
               </CardContent>
             </Card>
@@ -108,7 +110,7 @@ export default function CollectionClient({
                       >
                         {statusIcon[request.status]}
                         <span className="ml-1 capitalize whitespace-nowrap">
-                          {request.status}
+                          {t(request.status)}
                         </span>
                       </Badge>
                     </div>
@@ -118,18 +120,18 @@ export default function CollectionClient({
                   </CardHeader>
                   <CardFooter className="pt-0">
                     {request.status === "pending" ? (
-                      <Button 
-                        variant="destructive" 
+                      <Button
+                        variant="destructive"
                         className="w-full"
                         onClick={() => handleCancel(request.id)}
                       >
                         <XCircle className="w-4 h-4 mr-2" />
-                        Cancel Request
+                        {t("cancelRequest")}
                       </Button>
                     ) : (
                       <Button variant="outline" className="w-full">
                         <BookOpen className="w-4 h-4 mr-2" />
-                        View Details
+                        {t("viewDetails")}
                       </Button>
                     )}
                   </CardFooter>
@@ -142,7 +144,7 @@ export default function CollectionClient({
         <Card>
           <CardContent className="pt-6">
             <p className="text-center text-muted-foreground">
-              You haven&apos;t made any book requests yet.
+              {t("noRequestsYet")}
             </p>
           </CardContent>
         </Card>

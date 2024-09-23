@@ -3,10 +3,9 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
-import { getDrizzleDB } from "./drizzle/drizzleDB";
 import { MemberRepository } from "./repositories/memberRepository";
+import { db } from "./drizzle/db";
 
-const db = getDrizzleDB();
 const memberRepository = new MemberRepository(db);
 
 export const authOptions = {
