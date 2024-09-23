@@ -25,7 +25,7 @@ export function BookDetails({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full">
-        <div className="flex flex-col sm:flex-row">
+        <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <div className="w-full sm:w-1/3 mb-4 sm:mb-0 sm:mr-4">
             {book.imageUrl ? (
               <Image
@@ -58,7 +58,7 @@ export function BookDetails({
             </p>
           </div>
         </div>
-        <div className="flex justify-between flex-col">
+        <div className="flex justify-between flex-col gap-4">
           <Button onClick={onToggleFavorite} variant="outline">
             <Heart
               className={`w-5 h-5 mr-2 ${

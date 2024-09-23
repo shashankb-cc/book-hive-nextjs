@@ -11,7 +11,9 @@ export default async function CollectionPage() {
     <>
       <TopNavbar />
       <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">{t("myBookCollection")}</h1>
+        <h1 className="text-4xl text-center font-bold mb-6">
+          {t("myBookCollection")}
+        </h1>
         <Suspense fallback={<div>Loading...</div>}>
           <CollectionClient bookRequests={bookRequests || []} />
         </Suspense>

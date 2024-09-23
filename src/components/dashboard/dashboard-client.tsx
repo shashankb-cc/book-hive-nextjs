@@ -38,6 +38,20 @@ interface DashboardProps {
   selectedGenre: string;
 }
 
+const timeZoneCurrencyMap: Record<string, string> = {
+  "Asia/Calcutta": "INR",
+  "America/New_York": "USD",
+  "Europe/London": "GBP",
+  // Add more mappings as needed
+};
+
+const exchangeRates: Record<string, number> = {
+  USD: 0.012,
+  INR: 1,
+  GBP: 0.009,
+  // Add more exchange rates as needed
+};
+
 export default function Dashboard({
   books,
   currentPage,
@@ -50,6 +64,7 @@ export default function Dashboard({
   const [selectedBook, setSelectedBook] = useState<IBook | null>(null);
   const [borrowingBook, setBorrowingBook] = useState<IBook | null>(null);
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
+  const [currency, setCurrency] = useState<string>("INR");
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -61,7 +76,24 @@ export default function Dashboard({
       }
     };
     fetchFavorites();
+
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const detectedCurrency = timeZoneCurrencyMap[timeZone] || "INR";
+    setCurrency(detectedCurrency);
   }, []);
+
+  const formatPrice = (price: number) => {
+    const baseCurrency = "INR";
+    const convertedPrice =
+      price * (exchangeRates[currency] / exchangeRates[baseCurrency]);
+
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(convertedPrice);
+  };
 
   const handleViewDetails = (book: IBook) => {
     setSelectedBook(book);
@@ -194,7 +226,7 @@ export default function Dashboard({
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-24">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold mb-4 sm:mb-0">
             {t("featuredBooks")}
@@ -229,6 +261,9 @@ export default function Dashboard({
                     </div>
                   </div>
                 )}
+                <div className="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded-full text-sm font-semibold">
+                  {formatPrice(book.price)}
+                </div>
               </div>
               <CardContent className="flex-grow p-4">
                 <CardTitle className="text-lg font-semibold mb-2 line-clamp-2">
@@ -273,7 +308,10 @@ export default function Dashboard({
 
       {selectedBook && (
         <BookDetails
-          book={selectedBook}
+          book={{
+            ...selectedBook,
+            price: Number(formatPrice(selectedBook.price)),
+          }}
           onClose={closeBookDetails}
           onBorrow={() => handleBorrowBook(selectedBook)}
           isFavorite={favorites.has(selectedBook.id)}
@@ -282,7 +320,10 @@ export default function Dashboard({
       )}
       {borrowingBook && (
         <BorrowConfirmationDialog
-          book={borrowingBook}
+          book={{
+            ...borrowingBook,
+            price: Number(formatPrice(borrowingBook.price)),
+          }}
           onConfirm={handleConfirmBorrow}
           onCancel={() => setBorrowingBook(null)}
         />
