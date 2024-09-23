@@ -1,6 +1,8 @@
 {
   "Common": {
-    "selectLanguage": "Select Language"
+    "selectLanguage": "Select Language",
+    "success": "Success",
+    "error": "Error"
   },
   "LoginPage": {
     "title": "Login to BookHive",
@@ -116,17 +118,45 @@
     "selectGenre": "Select Genre",
     "allGenres": "All Genres",
     "borrowBook": "Borrow Book",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "success": "Success",
+    "error": "Error",
+    "borrowError": "Error borrowing book",
+    "removedFromFavorites": "Removed from Favorites",
+    "removedFromFavoritesDescription": "The book has been removed from your favorites",
+    "addedToFavorites": "Added to Favorites",
+    "addedToFavoritesDescription": "The book has been added to your favorites",
+    "favoriteToggleError": "Error toggling favorite status"
+  },
+  "BookDetails": {
+    "author": "Author",
+    "genre": "Genre",
+    "isbn": "ISBN",
+    "availableCopies": "Available Copies",
+    "removeFromFavorites": "Remove from Favorites",
+    "addToFavorites": "Add to Favorites",
+    "close": "Close"
+  },
+  "BorrowConfirmation": {
+    "title": "Confirm Borrowing",
+    "description": "Are you sure you want to borrow \"{title}\" by {author}?",
+    "cancel": "Cancel",
+    "confirm": "Confirm Borrow"
   },
   "Collection": {
-    "title": "My Book Collection",
+    "myBookCollection": "My Book Collection",
+    "loading": "Loading...",
     "bookRequests": "Book Requests",
-    "filterByStatus": "Filter by status",
+    "filterByStatus": "Filter by Status",
     "allRequests": "All Requests",
-    "noRequests": "No book requests found for the selected filter.",
-    "noRequestsYet": "You haven't made any book requests yet.",
+    "pending": "Pending",
+    "issued": "Issued",
+    "rejected": "Rejected",
+    "returned": "Returned",
+    "noRequests": "No requests found.",
     "cancelRequest": "Cancel Request",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "noRequestsYet": "No requests yet."
   },
   "DueSoon": {
     "title": "Books Due Soon",
@@ -136,17 +166,44 @@
     "noDueSoon": "No Books Due Soon",
     "noOverdue": "No Overdue Books",
     "noDueSoonMessage": "You don't have any books due in the next 7 days.",
-    "noOverdueMessage": "Great job! You don't have any overdue books."
+    "noOverdueMessage": "Great job! You don't have any overdue books.",
+    "issued": "Issued",
+    "due": "Due",
+    "bookName": "Book Name"
   },
   "Favorites": {
     "title": "My Favorite Books",
     "noFavorites": "No Favorite Books Yet",
-    "noFavoritesMessage": "Start adding books to your favorites to see them here!"
+    "noFavoritesMessage": "Start adding books to your favorites to see them here!",
+    "author": "Author",
+    "genre": "Genre",
+    "isbn": "ISBN"
   },
   "Transactions": {
     "title": "Transaction History",
     "noTransactions": "No Transactions Yet",
     "noTransactionsMessage": "You haven't borrowed any books yet. Start exploring our collection and make your first borrow!",
-    "exploreBooks": "Explore Books"
+    "exploreBooks": "Explore Books",
+    "issued": "Issued",
+    "due": "Due",
+    "returned": "Returned",
+    "bookTitle": "Book Title",
+    "status": {
+      "returned": "Returned",
+      "overdue": "Overdue",
+      "borrowed": "Borrowed"
+    }
+  },
+  "UserNavBar": {
+    "title": "BookHive",
+    "home": "Home",
+    "myBooks": "My Books",
+    "borrowingHistory": "Borrowing History",
+    "favorites": "Favorites",
+    "dueSoon": "Due Soon"
+  },
+  "UserDropdown": {
+    "viewProfile": "View Profile",
+    "logOut": "Log out"
   }
 }

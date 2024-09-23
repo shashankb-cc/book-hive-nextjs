@@ -1,9 +1,8 @@
-// components/dashboard/book-details.tsx
 import { IBook } from "@/lib/models";
 import { Heart } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-// ... other imports
+import { useTranslations } from "next-intl";
 
 interface BookDetailsProps {
   book: IBook;
@@ -20,7 +19,8 @@ export function BookDetails({
   isFavorite,
   onToggleFavorite,
 }: BookDetailsProps) {
-  // ... existing code
+  const t = useTranslations("BookDetails");
+  const dashboardT = useTranslations("Dashboard");
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -45,16 +45,16 @@ export function BookDetails({
           <div className="w-full sm:w-2/3">
             <h2 className="text-2xl font-bold mb-2">{book.title}</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-2">
-              Author: {book.author}
+              {t("author")}: {book.author}
             </p>
             <p className="text-gray-600 dark:text-gray-300 mb-2">
-              Genre: {book.genre}
+              {t("genre")}: {book.genre}
             </p>
             <p className="text-gray-600 dark:text-gray-300 mb-2">
-              ISBN: {book.isbnNo}
+              {t("isbn")}: {book.isbnNo}
             </p>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Available Copies: {book.availableNumberOfCopies}
+              {t("availableCopies")}: {book.availableNumberOfCopies}
             </p>
           </div>
         </div>
@@ -65,17 +65,19 @@ export function BookDetails({
                 isFavorite ? "fill-current text-red-500" : ""
               }`}
             />
-            {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+            {isFavorite ? t("removeFromFavorites") : t("addToFavorites")}
           </Button>
           <Button
             onClick={onBorrow}
             disabled={book.availableNumberOfCopies === 0}
           >
-            {book.availableNumberOfCopies > 0 ? "Borrow Book" : "Unavailable"}
+            {book.availableNumberOfCopies > 0
+              ? dashboardT("borrowBook")
+              : dashboardT("unavailable")}
           </Button>
         </div>
         <Button onClick={onClose} className="mt-4 w-full">
-          Close
+          {t("close")}
         </Button>
       </div>
     </div>
