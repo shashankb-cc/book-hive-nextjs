@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -10,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/ui/icons";
 import { Mail, Lock, User, Phone, Loader2 } from "lucide-react";
 import { registerSchema, type RegisterFormData } from "@/lib/zodSchema";
-import { useState } from "react";
 import { createMember } from "@/actions/memberActions";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -26,6 +26,7 @@ export function RegisterForm() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   });
@@ -45,6 +46,11 @@ export function RegisterForm() {
         setTimeout(() => {
           router.push(`/${locale}/login`);
         }, 3000);
+      } else if (result.error === "Email already exists") {
+        setError("email", {
+          type: "manual",
+          message: t("emailAlreadyExists"),
+        });
       } else {
         setServerError(result.error || t("registrationFailed"));
       }

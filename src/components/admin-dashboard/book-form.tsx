@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -15,19 +16,27 @@ import {
   FileText,
   Copy,
   Image as ImageIcon,
+  AlertCircle,
 } from "lucide-react";
 import { IBook } from "@/lib/models";
 import { bookSchema, type BookFormData } from "@/lib/zodSchema";
 import Image from "next/image";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { createBook, updateBook } from "@/actions/bookActions";
 
 interface BookFormProps {
-  onClose: () => void;
   book?: IBook;
-  onSubmit: (formData: FormData) => Promise<void>;
 }
 
-export default function BookForm({ onClose, book, onSubmit }: BookFormProps) {
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"];
+
+export default function BookForm({ book }: BookFormProps) {
+  const router = useRouter();
+  const { toast } = useToast();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const {
     register,
@@ -59,6 +68,15 @@ export default function BookForm({ onClose, book, onSubmit }: BookFormProps) {
   useEffect(() => {
     if (watchImage && watchImage.length > 0) {
       const file = watchImage[0];
+      if (file.size > MAX_FILE_SIZE) {
+        setFileError("File size must be less than 2MB");
+        return;
+      }
+      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+        setFileError("Only .jpg and .png files are allowed");
+        return;
+      }
+      setFileError(null);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -67,7 +85,10 @@ export default function BookForm({ onClose, book, onSubmit }: BookFormProps) {
     }
   }, [watchImage]);
 
-  const onSubmitForm = (data: BookFormData) => {
+  const onSubmit = async (data: BookFormData) => {
+    if (fileError) {
+      return;
+    }
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (key === "image" && value instanceof FileList && value.length > 0) {
@@ -79,180 +100,209 @@ export default function BookForm({ onClose, book, onSubmit }: BookFormProps) {
     if (book) {
       formData.append("id", book.id.toString());
     }
-    onSubmit(formData);
+
+    try {
+      const action = book ? updateBook : createBook;
+      const result = await action(null, formData);
+      if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description:
+            result.message ||
+            (book ? "Book updated successfully" : "Book created successfully"),
+          className: "bg-green-400 text-white",
+        });
+        router.push("/admin-dashboard/books");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4">
-          {book ? "Update Book" : "Add New Book"}
-        </h2>
-        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <div className="relative">
-              <Book className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                id="name"
-                {...register("name")}
-                placeholder="Book Name"
-                className="pl-10"
-              />
-            </div>
-            {errors.name && (
-              <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="author">Author</Label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                id="author"
-                {...register("author")}
-                placeholder="Author Name"
-                className="pl-10"
-              />
-            </div>
-            {errors.author && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.author.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="publisher">Publisher</Label>
-            <div className="relative">
-              <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                id="publisher"
-                {...register("publisher")}
-                placeholder="Publisher Name"
-                className="pl-10"
-              />
-            </div>
-            {errors.publisher && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.publisher.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="genre">Genre</Label>
-            <div className="relative">
-              <BookOpen className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                id="genre"
-                {...register("genre")}
-                placeholder="Book Genre"
-                className="pl-10"
-              />
-            </div>
-            {errors.genre && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.genre.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="isbn">ISBN</Label>
-            <div className="relative">
-              <Barcode className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                id="isbn"
-                {...register("isbn")}
-                placeholder="ISBN Number"
-                className="pl-10"
-              />
-            </div>
-            {errors.isbn && (
-              <p className="text-sm text-red-500 mt-1">{errors.isbn.message}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="pages">Number of Pages</Label>
-            <div className="relative">
-              <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                id="pages"
-                type="number"
-                {...register("pages", { valueAsNumber: true })}
-                placeholder="Number of Pages"
-                className="pl-10"
-              />
-            </div>
-            {errors.pages && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.pages.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="copies">Total Number of Copies</Label>
-            <div className="relative">
-              <Copy className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                id="copies"
-                type="number"
-                {...register("copies", { valueAsNumber: true })}
-                placeholder="Total Copies"
-                className="pl-10"
-              />
-            </div>
-            {errors.copies && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.copies.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="image">Book Cover Image</Label>
-            <div className="relative">
-              <ImageIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                id="image"
-                type="file"
-                accept="image/*"
-                {...register("image")}
-                className="pl-10"
-              />
-            </div>
-            {imagePreview && (
-              <div className="mt-2">
-                <Image
-                  src={imagePreview}
-                  alt="Book cover preview"
-                  width={200}
-                  height={300}
-                  className="w-full max-w-[200px] h-auto rounded-md object-cover"
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="mt-6 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              className="w-full sm:w-auto"
-            >
-              Cancel
-            </Button>
-            <Button type="submit" className="w-full sm:w-auto">
-              {book ? "Update Book" : "Add Book"}
-            </Button>
-          </div>
-        </form>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4 max-w-md mx-auto"
+    >
+      <div>
+        <Label htmlFor="name">Book Title</Label>
+        <div className="relative">
+          <Book className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            id="name"
+            {...register("name")}
+            placeholder="Book Title"
+            className="pl-10"
+          />
+        </div>
+        {errors.name && (
+          <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+        )}
       </div>
-    </div>
+
+      <div>
+        <Label htmlFor="author">Author</Label>
+        <div className="relative">
+          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            id="author"
+            {...register("author")}
+            placeholder="Author Name"
+            className="pl-10"
+          />
+        </div>
+        {errors.author && (
+          <p className="text-sm text-red-500 mt-1">{errors.author.message}</p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="publisher">Publisher</Label>
+        <div className="relative">
+          <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            id="publisher"
+            {...register("publisher")}
+            placeholder="Publisher Name"
+            className="pl-10"
+          />
+        </div>
+        {errors.publisher && (
+          <p className="text-sm text-red-500 mt-1">
+            {errors.publisher.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="genre">Genre</Label>
+        <div className="relative">
+          <BookOpen className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            id="genre"
+            {...register("genre")}
+            placeholder="Book Genre"
+            className="pl-10"
+          />
+        </div>
+        {errors.genre && (
+          <p className="text-sm text-red-500 mt-1">{errors.genre.message}</p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="isbn">ISBN</Label>
+        <div className="relative">
+          <Barcode className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            id="isbn"
+            {...register("isbn")}
+            placeholder="ISBN Number"
+            className="pl-10"
+          />
+        </div>
+        {errors.isbn && (
+          <p className="text-sm text-red-500 mt-1">{errors.isbn.message}</p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="pages">Number of Pages</Label>
+        <div className="relative">
+          <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            id="pages"
+            type="number"
+            {...register("pages", { valueAsNumber: true })}
+            placeholder="Number of Pages"
+            className="pl-10"
+          />
+        </div>
+        {errors.pages && (
+          <p className="text-sm text-red-500 mt-1">{errors.pages.message}</p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="copies">Total Number of Copies</Label>
+        <div className="relative">
+          <Copy className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            id="copies"
+            type="number"
+            {...register("copies", { valueAsNumber: true })}
+            placeholder="Total Copies"
+            className="pl-10"
+          />
+        </div>
+        {errors.copies && (
+          <p className="text-sm text-red-500 mt-1">{errors.copies.message}</p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="image">Book Cover Image</Label>
+        <div className="relative">
+          <ImageIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            id="image"
+            type="file"
+            accept=".jpg,.jpeg,.png"
+            {...register("image")}
+            className="pl-10"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                if (file.size > MAX_FILE_SIZE) {
+                  setFileError("File size must be less than 2MB");
+                } else if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                  setFileError("Only .jpg and .png files are allowed");
+                } else {
+                  setFileError(null);
+                }
+              }
+            }}
+          />
+        </div>
+        {fileError && (
+          <Alert variant="destructive" className="mt-2">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{fileError}</AlertDescription>
+          </Alert>
+        )}
+        {imagePreview && !fileError && (
+          <div className="mt-2">
+            <Image
+              src={imagePreview}
+              alt="Book cover preview"
+              width={200}
+              height={300}
+              className="w-full max-w-[200px] h-auto rounded-md object-cover"
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-end space-x-4">
+        <Button type="button" variant="outline" onClick={() => router.back()}>
+          Cancel
+        </Button>
+        <Button type="submit" disabled={!!fileError}>
+          {book ? "Update Book" : "Add Book"}
+        </Button>
+      </div>
+    </form>
   );
 }

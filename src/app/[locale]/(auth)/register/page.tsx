@@ -1,5 +1,4 @@
 import { RegisterForm } from "@/components/register-form";
-import { useTranslations } from "next-intl";
 import { unstable_setRequestLocale } from "next-intl/server";
 
 type RegisterPageProps = {

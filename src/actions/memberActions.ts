@@ -30,6 +30,15 @@ export async function getMemberData(searchParams: {
 export async function createMember(prevState: any, formData: FormData) {
   try {
     const memberRepository = new MemberRepository(db);
+
+    // Check if email already exists
+    const existingMember = await memberRepository.getMemberByEmail(
+      formData.get("email") as string
+    );
+    if (existingMember) {
+      return { error: "Email already exists" };
+    }
+
     const result = await memberRepository.createMember(formData);
     if (result === null) {
       revalidatePath("/admin-dashboard/members");
@@ -169,5 +178,15 @@ export async function changePassword(
   } catch (error) {
     console.error("Error changing password:", error);
     return { error: "Failed to change password" };
+  }
+}
+export async function getMemberById(id: number): Promise<IMember | undefined> {
+  try {
+    const memberRepository = new MemberRepository(db);
+    const book = await memberRepository.getMemberById(id);
+    return book;
+  } catch (error) {
+    console.error("Error fetching member by ID:", error);
+    return undefined;
   }
 }

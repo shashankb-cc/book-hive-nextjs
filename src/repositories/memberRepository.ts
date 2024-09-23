@@ -247,4 +247,15 @@ export class MemberRepository {
       .limit(1);
     return result.length > 0;
   }
+  async getMemberById(id: number): Promise<IMember | undefined> {
+    if (!id) {
+      return undefined;
+    }
+    const [member] = await this.db
+      .select()
+      .from(members)
+      .where(eq(members.id, id))
+      .limit(1);
+    return member as IMember;
+  }
 }
