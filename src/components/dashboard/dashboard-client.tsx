@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Heart, BookOpen } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/dashboard/search-form";
@@ -19,6 +19,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { BorrowConfirmationDialog } from "@/components/dashboard/borrow-confirmation";
 import Image from "next/image";
+import { LanguageSwitcher } from "@/components/language-swicher";
 
 import { toast } from "@/hooks/use-toast";
 import {
@@ -156,7 +157,7 @@ export default function Dashboard({
 
   return (
     <>
-      <header className="bg-white dark:bg-gray-800 shadow mb-6">
+      <header className="bg-white dark:bg-gray-800 shadow fixed top-0 left-16 right-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between">
           <div className="flex items-center mb-4 sm:mb-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -164,29 +165,36 @@ export default function Dashboard({
             </h1>
           </div>
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <Select
-              onValueChange={handleGenreChange}
-              value={selectedGenre || "all"}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t("selectGenre")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("allGenres")}</SelectItem>
-                {genres.map((genre) => (
-                  <SelectItem key={genre} value={genre}>
-                    {genre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <SearchInput placeholder={t("searchPlaceholder")} />
+            <div className="w-[180px] h-10">
+              <Select
+                onValueChange={handleGenreChange}
+                value={selectedGenre || "all"}
+              >
+                <SelectTrigger className="w-full h-full border border-gray-300 dark:border-gray-600">
+                  <SelectValue placeholder={t("selectGenre")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t("allGenres")}</SelectItem>
+                  {genres.map((genre) => (
+                    <SelectItem key={genre} value={genre}>
+                      {genre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="w-[200px] h-10">
+              <SearchInput placeholder={t("searchPlaceholder")} />
+            </div>
+            <div className="w-[180px] h-10">
+              <LanguageSwitcher />
+            </div>
             <UserDropdown />
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-24">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold mb-4 sm:mb-0">
             {t("featuredBooks")}
