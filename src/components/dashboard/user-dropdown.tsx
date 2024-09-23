@@ -11,8 +11,11 @@ import {
 import { User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { handleSignOut } from "@/actions/authActions";
+import { useTranslations } from "next-intl";
 
 export function UserDropdown() {
+  const t = useTranslations("UserDropdown");
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,14 +30,14 @@ export function UserDropdown() {
         <DropdownMenuItem asChild>
           <Link href="/profile" className="flex items-center">
             <User className="mr-2 h-4 w-4" />
-            <span>View Profile</span>
+            <span>{t("viewProfile")}</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <form action={handleSignOut}>
             <button className="flex w-full items-center">
               <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
+              <span>{t("logOut")}</span>
             </button>
           </form>
         </DropdownMenuItem>

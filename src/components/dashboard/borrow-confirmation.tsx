@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { IBook } from "@/lib/models";
+import { useTranslations } from "next-intl";
 
 interface BorrowConfirmationDialogProps {
   book: IBook;
@@ -21,21 +22,22 @@ export function BorrowConfirmationDialog({
   onConfirm,
   onCancel,
 }: BorrowConfirmationDialogProps) {
+  const t = useTranslations("BorrowConfirmation");
+
   return (
     <Dialog open={true} onOpenChange={onCancel}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Confirm Borrowing</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Are you sure you want to borrow &quot;{book.title}&quot; by{" "}
-            {book.author}?
+            {t("description", { title: book.title, author: book.author })}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button onClick={onCancel} variant="outline">
-            Cancel
+            {t("cancel")}
           </Button>
-          <Button onClick={onConfirm}>Confirm Borrow</Button>
+          <Button onClick={onConfirm}>{t("confirm")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, BookIcon, InboxIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface Transaction {
   id: number;
@@ -25,10 +26,11 @@ export default function HistoryClient({
   initialTransactions,
 }: HistoryClientProps) {
   const [transactions, setTransactions] = useState(initialTransactions);
+  const t = useTranslations("Transactions");
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Transaction History</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
       {transactions && transactions.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {transactions.map((transaction) => (
@@ -43,7 +45,7 @@ export default function HistoryClient({
                         : "destructive"
                     }
                   >
-                    {transaction.status}
+                    {t(`status.${transaction.status}`)}
                   </Badge>
                 </CardTitle>
               </CardHeader>
@@ -52,27 +54,29 @@ export default function HistoryClient({
                   <div className="flex items-center">
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     <span className="text-sm">
-                      Issued: {formatDate(new Date(transaction.issueDate))}
+                      {t("issued")}:{" "}
+                      {formatDate(new Date(transaction.issueDate))}
                     </span>
                   </div>
                   <div className="flex items-center">
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     <span className="text-sm">
-                      Due: {formatDate(new Date(transaction.dueDate))}
+                      {t("due")}: {formatDate(new Date(transaction.dueDate))}
                     </span>
                   </div>
                   {transaction.returnDate && (
                     <div className="flex items-center">
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       <span className="text-sm">
-                        Returned: {formatDate(new Date(transaction.returnDate))}
+                        {t("returned")}:{" "}
+                        {formatDate(new Date(transaction.returnDate))}
                       </span>
                     </div>
                   )}
                   <div className="flex items-center">
                     <BookIcon className="mr-2 h-4 w-4" />
                     <span className="text-sm">
-                      Book Title: {transaction.bookTitle}
+                      {t("bookTitle")}: {transaction.bookTitle}
                     </span>
                   </div>
                 </div>
@@ -85,14 +89,13 @@ export default function HistoryClient({
           <CardContent className="flex flex-col items-center justify-center py-10">
             <InboxIcon className="h-16 w-16 text-gray-400 mb-4" />
             <h2 className="text-2xl font-semibold text-gray-700 mb-2">
-              No Transactions Yet
+              {t("noTransactions")}
             </h2>
             <p className="text-gray-500 text-center mb-4">
-              You haven&apos;t borrowed any books yet. Start exploring our
-              collection and make your first borrow!
+              {t("noTransactionsMessage")}
             </p>
             <Link href="/dashboard">
-              <Button>Explore Books</Button>
+              <Button>{t("exploreBooks")}</Button>
             </Link>
           </CardContent>
         </Card>

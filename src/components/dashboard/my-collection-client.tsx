@@ -63,8 +63,7 @@ export default function CollectionClient({
     if (result.success) {
       setRequests(requests.filter((request) => request.id !== id));
     } else {
-      // Handle error (e.g., show an error message)
-      console.error(result.message);
+      console.error(result.message); // Handle error
     }
   };
 

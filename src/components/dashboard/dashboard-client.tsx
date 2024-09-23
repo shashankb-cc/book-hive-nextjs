@@ -45,6 +45,7 @@ export default function Dashboard({
   selectedGenre,
 }: DashboardProps) {
   const t = useTranslations("Dashboard");
+  const commonT = useTranslations("Common");
   const [selectedBook, setSelectedBook] = useState<IBook | null>(null);
   const [borrowingBook, setBorrowingBook] = useState<IBook | null>(null);
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
@@ -100,7 +101,7 @@ export default function Dashboard({
         const result = await borrowBook(borrowingBook.id);
         if (result.success) {
           toast({
-            title: t("success", { ns: "Common" }),
+            title: commonT("success"),
             description: result.message,
             className: "bg-green-400 text-white",
           });
@@ -108,7 +109,7 @@ export default function Dashboard({
           router.refresh();
         } else {
           toast({
-            title: t("error", { ns: "Common" }),
+            title: commonT("error"),
             description: result.message,
             className: "bg-red-400 text-white",
           });
@@ -146,7 +147,7 @@ export default function Dashboard({
     } catch (error) {
       console.error("Error toggling favorite:", error);
       toast({
-        title: t("error", { ns: "Common" }),
+        title: commonT("error"),
         description: t("favoriteToggleError"),
         className: "bg-red-400 text-white",
       });
