@@ -179,6 +179,7 @@
     "title": "My Favorite Books",
     "noFavorites": "No Favorite Books Yet",
     "noFavoritesMessage": "Start adding books to your favorites to see them here!",
+    "removeFromFavorites": "Remove from Favorites",
     "author": "Author",
     "genre": "Genre",
     "isbn": "ISBN"
@@ -193,6 +194,7 @@
     "returned": "Returned",
     "bookTitle": "Book Title",
     "status": {
+      "name": "Status",
       "returned": "Returned",
       "overdue": "Overdue",
       "borrowed": "Borrowed",

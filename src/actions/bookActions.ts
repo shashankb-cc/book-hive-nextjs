@@ -77,6 +77,7 @@ export async function createBook(prevState: any, formData: FormData) {
       numOfPages: parseInt(formData.get("pages") as string),
       totalNumOfCopies: parseInt(formData.get("copies") as string),
       availableNumberOfCopies: parseInt(formData.get("copies") as string),
+      price: parseInt(formData.get("price") as string),
     };
     const imageFile = formData.get("image") as File;
 

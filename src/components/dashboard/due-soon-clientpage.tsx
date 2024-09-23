@@ -30,7 +30,7 @@ export default function DueSoonClient({
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-4xl font-bold text-center">
           {showOverdue ? t("overdueTitle") : t("title")}
         </h1>
         <Button onClick={() => setShowOverdue(!showOverdue)}>

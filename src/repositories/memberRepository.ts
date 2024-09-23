@@ -230,6 +230,7 @@ export class MemberRepository {
         author: books.author,
         genre: books.genre,
         isbnNo: books.isbnNo,
+        imageUrl: books.imageUrl,
       })
       .from(favorites)
       .innerJoin(books, eq(favorites.bookId, books.id))
