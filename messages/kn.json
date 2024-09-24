@@ -213,5 +213,10 @@
   "UserDropdown": {
     "viewProfile": "ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ",
     "logOut": "ಲಾಗ್ ಔಟ್"
+  },
+  "LocaleSwitcher": {
+    "kn": "ಕನ್ನಡ",
+    "en": "English",
+    "label": "ಭಾಷೆ"
   }
 }

@@ -213,5 +213,10 @@
   "UserDropdown": {
     "viewProfile": "View Profile",
     "logOut": "Log out"
+  },
+  "LocaleSwitcher": {
+    "kn": "Kannada",
+    "en": "English",
+    "label": "Language"
   }
 }

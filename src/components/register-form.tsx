@@ -12,10 +12,9 @@ import { Icons } from "@/components/ui/icons";
 import { Mail, Lock, User, Phone, Loader2 } from "lucide-react";
 import { registerSchema, type RegisterFormData } from "@/lib/zodSchema";
 import { createMember } from "@/actions/memberActions";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 export function RegisterForm() {
-  const locale = useLocale();
   const router = useRouter();
   const t = useTranslations("RegisterPage");
   const [serverError, setServerError] = useState<string | null>(null);
@@ -44,7 +43,7 @@ export function RegisterForm() {
       if (result.message) {
         setRegistrationSuccess(true);
         setTimeout(() => {
-          router.push(`/${locale}/login`);
+          router.push(`/login`);
         }, 3000);
       } else if (result.error === "Email already exists") {
         setError("email", {
@@ -217,7 +216,7 @@ export function RegisterForm() {
         {t("haveAccount")}{" "}
         <Link
           className="font-medium text-primary hover:underline"
-          href={`/${locale}/login`}
+          href={`/login`}
         >
           {t("logIn")}
         </Link>

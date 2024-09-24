@@ -2,16 +2,16 @@
 
 import React from "react";
 import { UserDropdown } from "@/components/dashboard/user-dropdown";
-import { LanguageSwitcher } from "@/components/language-swicher";
+
 import { usePathname } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import {  useTranslations } from "next-intl";
+import LocaleSwitcher from "../localSwitcher";
 
 export function TopNavbar() {
   const t = useTranslations("Common");
   const pathname = usePathname();
-  const locale = useLocale();
 
-  const dashboardPath = pathname === `/${locale}/dashboard`;
+  const dashboardPath = pathname === `/dashboard`;
 
   if (dashboardPath) {
     return null;
@@ -26,7 +26,7 @@ export function TopNavbar() {
           </h1>
         </div>
         <div className="flex items-center space-x-4">
-          <LanguageSwitcher />
+          <LocaleSwitcher />
           <UserDropdown />
         </div>
       </div>
