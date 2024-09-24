@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User, Mail, Phone, UserCircle } from "lucide-react";
+import { User, Mail, Phone, UserCircle, Lock } from "lucide-react";
 import { IMember } from "@/lib/models";
 import { useToast } from "@/hooks/use-toast";
 import { createMember, updateMember } from "@/actions/memberActions";
@@ -76,116 +76,125 @@ export default function MemberForm({ member }: MemberFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
-      <div>
-        <Label htmlFor="firstName">First Name</Label>
-        <div className="relative">
-          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <Input
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            placeholder="First Name"
-            className="pl-10"
-            required
-          />
-        </div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl">
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          {member ? "Edit Member" : "Add New Member"}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label htmlFor="firstName">First Name</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="First Name"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
 
-      <div>
-        <Label htmlFor="lastName">Last Name</Label>
-        <div className="relative">
-          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <Input
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            placeholder="Last Name"
-            className="pl-10"
-            required
-          />
-        </div>
-      </div>
+            <div>
+              <Label htmlFor="lastName">Last Name</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Last Name"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
 
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email"
-            className="pl-10"
-            required
-          />
-        </div>
-      </div>
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
 
-      <div>
-        <Label htmlFor="phoneNumber">Phone Number</Label>
-        <div className="relative">
-          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <Input
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            placeholder="Phone Number"
-            className="pl-10"
-          />
-        </div>
-      </div>
+            <div>
+              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  placeholder="Phone Number"
+                  className="pl-10"
+                />
+              </div>
+            </div>
 
-      <div>
-        <Label htmlFor="role">Role</Label>
-        <div className="relative">
-          <UserCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" />
-          <Select
-            name="role"
-            value={formData.role}
-            onValueChange={handleRoleChange}
-          >
-            <SelectTrigger className="pl-10">
-              <SelectValue placeholder="Select role" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="member">Member</SelectItem>
-              <SelectItem value="librarian">Librarian</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+            <div>
+              <Label htmlFor="role">Role</Label>
+              <div className="relative">
+                <UserCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" />
+                <Select
+                  name="role"
+                  value={formData.role}
+                  onValueChange={handleRoleChange}
+                >
+                  <SelectTrigger className="pl-10">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="member">Member</SelectItem>
+                    <SelectItem value="librarian">Librarian</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
 
-      {!member && (
-        <div>
-          <Label htmlFor="password">Password</Label>
-          <div className="relative">
-            <UserCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className="pl-10"
-              required={!member}
-            />
+            {!member && (
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Password"
+                    className="pl-10"
+                    required={!member}
+                  />
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
 
-      <div className="flex justify-end space-x-4">
-        <Button type="button" variant="outline" onClick={() => router.back()}>
-          Cancel
-        </Button>
-        <Button type="submit">{member ? "Update" : "Create"} Member</Button>
+          <div className="flex justify-end space-x-4 mt-6">
+            <Button type="button" variant="outline" onClick={() => router.back()}>
+              Cancel
+            </Button>
+            <Button type="submit">{member ? "Update" : "Create"} Member</Button>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   );
 }
