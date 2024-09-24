@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/ui/icons";
-import { Mail, Lock, User, Phone, Loader2 } from "lucide-react";
+import { Mail, Lock, User, Phone, Loader2, Eye, EyeOff } from "lucide-react"; // Import Eye & EyeOff icons
 import { registerSchema, type RegisterFormData } from "@/lib/zodSchema";
 import { createMember } from "@/actions/memberActions";
 import { useTranslations } from "next-intl";
@@ -20,6 +20,7 @@ export function RegisterForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
   const {
     register,
@@ -29,6 +30,10 @@ export function RegisterForm() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   });
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev); // Toggle password visibility
+  };
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
@@ -175,10 +180,16 @@ export function RegisterForm() {
             <Input
               id="password"
               {...register("password")}
-              type="password"
-              className="pl-10"
+              type={showPassword ? "text" : "password"} // Toggle between text and password
+              className="pl-10 pr-10"
               placeholder="**********"
             />
+            <div
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 dark:text-gray-400"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />} {/* Eye toggle */}
+            </div>
           </div>
           {errors.password && (
             <p className="text-sm text-red-500 form-error">

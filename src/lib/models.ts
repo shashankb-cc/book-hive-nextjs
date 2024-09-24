@@ -100,3 +100,12 @@ export interface ITransaction extends ITransactionBase {
 }
 
 type TStatus = "issued" | "returned" | "pending" | "rejected";
+export interface IProfessorBase {
+  name: string;
+  department: string;
+  bio: string;
+  calendly_link: string | null;
+}
+export interface IProfessor extends IProfessorBase {
+  id: number;
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -7,11 +8,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react"; // Import Eye & EyeOff Icons
 import { loginSchema, type LoginFormData } from "@/lib/zodSchema";
 import { useFormState } from "react-dom";
 import { authenticate } from "@/actions/authActions";
-import {  useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 type LoginFormProps = {
   children: React.ReactNode;
@@ -20,6 +21,8 @@ type LoginFormProps = {
 export function LoginForm({ children }: LoginFormProps) {
   const t = useTranslations("LoginPage");
   const [state, formAction] = useFormState(authenticate, undefined);
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+
   const {
     register,
     handleSubmit,
@@ -27,6 +30,10 @@ export function LoginForm({ children }: LoginFormProps) {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev); // Toggle password visibility
+  };
 
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
@@ -71,11 +78,17 @@ export function LoginForm({ children }: LoginFormProps) {
             />
             <Input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle between text and password
               {...register("password")}
-              className="pl-10"
+              className="pl-10 pr-10"
               placeholder="**********"
             />
+            <div
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 dark:text-gray-400"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />} {/* Eye toggle */}
+            </div>
           </div>
           {errors.password && (
             <p className="text-sm text-red-500">{errors.password.message}</p>
@@ -113,10 +126,7 @@ export function LoginForm({ children }: LoginFormProps) {
       <div className="">{children}</div>
       <p className="text-center text-sm text-gray-500 dark:text-gray-400">
         {t("noAccount")}{" "}
-        <Link
-          className="font-medium text-primary hover:underline"
-          href={`/register`} 
-        >
+        <Link className="font-medium text-primary hover:underline" href={`/register`}>
           {t("signUp")}
         </Link>
       </p>
