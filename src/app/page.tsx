@@ -13,12 +13,11 @@ import {
   LibraryIcon,
   MenuIcon,
 } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 export default function Component() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const t = useTranslations("HomePage");
-  const locale = useLocale();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -54,12 +53,12 @@ export default function Component() {
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <Link href={`/${locale}/register`}>
+          <Link href={`/register`}>
             <Button variant="ghost" size="sm" className="hidden sm:flex">
               {t("header.buttons.signUp")}
             </Button>
           </Link>
-          <Link href={`/${locale}/login`}>
+          <Link href={`/login`}>
             <Button size="sm">{t("header.buttons.logIn")}</Button>
           </Link>
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -114,7 +113,7 @@ export default function Component() {
                   </Link>
                 </nav>
                 <div className="mt-auto">
-                  <Link href={`/${locale}/register`}>
+                  <Link href={`/register`}>
                     <Button
                       className="w-full mb-2"
                       onClick={() => setIsMenuOpen(false)}
@@ -122,7 +121,7 @@ export default function Component() {
                       {t("header.buttons.signUp")}
                     </Button>
                   </Link>
-                  <Link href={`/${locale}/login`}>
+                  <Link href={`/login`}>
                     <Button
                       variant="outline"
                       className="w-full"

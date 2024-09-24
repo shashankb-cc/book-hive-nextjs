@@ -35,7 +35,8 @@
     "haveAccount": "Already have an account?",
     "logIn": "Log in",
     "successTitle": "Registration Successful!",
-    "successMessage": "Your account has been created. Redirecting to login page..."
+    "successMessage": "Your account has been created. Redirecting to login page...",
+    "emailAlreadyExists": "This email is already registered. Please use a different email or try logging in."
   },
   "ProfilePage": {
     "greeting": "Welcome, {name}",
@@ -212,5 +213,10 @@
   "UserDropdown": {
     "viewProfile": "View Profile",
     "logOut": "Log out"
+  },
+  "LocaleSwitcher": {
+    "kn": "Kannada",
+    "en": "English",
+    "label": "Language"
   }
 }

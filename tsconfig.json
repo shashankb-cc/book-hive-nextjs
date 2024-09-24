@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/authOptions.js", "src/middleware.ts"  ],
+, "src/authOptions.js", "src/middleware.js"  ],
   "exclude": [
     "node_modules"
   ]

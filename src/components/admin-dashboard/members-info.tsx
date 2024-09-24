@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,13 +28,8 @@ import {
 import SearchInput from "@/components/dashboard/search-form";
 import Pagination from "@/components/dashboard/pagination";
 import { IMember } from "@/lib/models";
-import MemberForm from "@/components/admin-dashboard/member-form";
 import { useToast } from "@/hooks/use-toast";
-import {
-  createMember,
-  deleteMember,
-  updateMember,
-} from "@/actions/memberActions";
+import { deleteMember } from "@/actions/memberActions";
 
 interface MemberDashboardProps {
   members: IMember[];
@@ -48,12 +44,7 @@ export default function MemberDashboard({
 }: MemberDashboardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showForm, setShowForm] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<IMember | undefined>(
-    undefined
-  );
   const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
@@ -79,42 +70,6 @@ export default function MemberDashboard({
     router.refresh();
   };
 
-  const handleAdd = () => {
-    setSelectedMember(undefined);
-    setShowForm(true);
-  };
-
-  const closeForm = () => {
-    setShowForm(false);
-    setSelectedMember(undefined);
-  };
-
-  const handleFormSubmit = async (formData: FormData) => {
-    startTransition(async () => {
-      const action = selectedMember ? updateMember : createMember;
-      const result = await action(null, formData);
-      if (result.error) {
-        toast({
-          title: "Error",
-          description: result.error,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Success",
-          description:
-            result.message ||
-            (selectedMember
-              ? "Member updated successfully"
-              : "Member added successfully"),
-          className: "bg-green-400 text-white",
-        });
-        closeForm();
-      }
-      router.refresh();
-    });
-  };
-
   return (
     <div className="container mx-auto p-6">
       <header className="bg-white dark:bg-gray-800 shadow mb-6 rounded-lg">
@@ -124,9 +79,11 @@ export default function MemberDashboard({
           </h1>
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <SearchInput placeholder="Search members..." />
-            <Button onClick={handleAdd}>
-              <Plus className="mr-2 h-4 w-4" /> Add Member
-            </Button>
+            <Link href="/admin-dashboard/members/create">
+              <Button>
+                <Plus className="mr-2 h-4 w-4" /> Add Member
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -157,6 +114,13 @@ export default function MemberDashboard({
                   <TableCell>{member.role}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
+                      <Link
+                        href={`/admin-dashboard/members/${member.id}/update`}
+                      >
+                        <Button variant="outline" size="sm">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </Link>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
@@ -206,14 +170,6 @@ export default function MemberDashboard({
           onPageChange={handlePageChange}
         />
       </div>
-
-      {showForm && (
-        <MemberForm
-          onClose={closeForm}
-          member={selectedMember}
-          onSubmit={handleFormSubmit}
-        />
-      )}
     </div>
   );
 }

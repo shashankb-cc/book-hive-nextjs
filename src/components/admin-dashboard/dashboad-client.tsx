@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
+import Link from "next/link";
+import { Pencil, Trash2, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -34,9 +35,8 @@ import {
 import SearchInput from "@/components/dashboard/search-form";
 import Pagination from "../dashboard/pagination";
 import { IBook } from "@/lib/models";
-import BookForm from "@/components/admin-dashboard/book-form";
 import { useToast } from "@/hooks/use-toast";
-import { createBook, deleteBook, updateBook } from "@/actions/bookActions";
+import { deleteBook } from "@/actions/bookActions";
 
 interface AdminDashboardProps {
   books: IBook[];
@@ -63,12 +63,7 @@ export default function AdminDashboard({
 }: AdminDashboardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showForm, setShowForm] = useState(false);
-  const [selectedBook, setSelectedBook] = useState<IBook | undefined>(
-    undefined
-  );
   const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
   const [sortField, setSortField] = useState<SortField>("title");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
@@ -80,13 +75,13 @@ export default function AdminDashboard({
       params.delete("genre");
     }
     params.set("page", "1");
-    router.push(`/admin-dashboard?${params.toString()}`);
+    router.push(`/admin-dashboard/books?${params.toString()}`);
   };
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", page.toString());
-    router.push(`/admin-dashboard?${params.toString()}`);
+    router.push(`/admin-dashboard/books?${params.toString()}`);
   };
 
   const handleDelete = async (id: number) => {
@@ -105,48 +100,6 @@ export default function AdminDashboard({
       });
     }
     router.refresh();
-  };
-
-  const handleEdit = (book: IBook) => {
-    setSelectedBook(book);
-    setShowForm(true);
-  };
-
-  const handleAdd = () => {
-    setSelectedBook(undefined);
-    setShowForm(true);
-  };
-
-  const closeForm = () => {
-    setShowForm(false);
-    setSelectedBook(undefined);
-  };
-
-  const handleFormSubmit = async (formData: FormData) => {
-    startTransition(async () => {
-      const action = selectedBook ? updateBook : createBook;
-      const result = await action(null, formData);
-      if (result.error) {
-        toast({
-          title: "Error",
-          description: result.error,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Success",
-          description:
-            result.message ||
-            (selectedBook
-              ? "Book updated successfully"
-              : "Book added successfully"),
-          duration: 1000,
-          className: "bg-green-400 text-white",
-        });
-        closeForm();
-      }
-      router.refresh();
-    });
   };
 
   const handleSort = (field: SortField) => {
@@ -189,9 +142,9 @@ export default function AdminDashboard({
               </SelectContent>
             </Select>
             <SearchInput placeholder="Search books..." />
-            <Button onClick={handleAdd} className="w-full sm:w-auto">
-              Add New Book
-            </Button>
+            <Link href="/admin-dashboard/books/create">
+              <Button className="w-full sm:w-auto">Add New Book</Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -241,14 +194,15 @@ export default function AdminDashboard({
                   <TableCell>{book.totalNumOfCopies}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(book)}
-                        className="bg-green-400"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      <Link href={`/admin-dashboard/books/${book.id}/update`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-green-400"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </Link>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
@@ -295,14 +249,6 @@ export default function AdminDashboard({
           </div>
         </CardContent>
       </Card>
-
-      {showForm && (
-        <BookForm
-          onSubmit={handleFormSubmit}
-          onClose={closeForm}
-          book={selectedBook}
-        />
-      )}
     </div>
   );
 }

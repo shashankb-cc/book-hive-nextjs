@@ -138,3 +138,13 @@ export async function deleteBook(id: number) {
     };
   }
 }
+export async function getBookById(id: number): Promise<IBook | null> {
+  try {
+    const bookRepository = new BookRepository(db);
+    const book = await bookRepository.getBookById(id);
+    return book;
+  } catch (error) {
+    console.error("Error fetching book by ID:", error);
+    return null;
+  }
+}

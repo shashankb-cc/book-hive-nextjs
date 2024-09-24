@@ -11,7 +11,7 @@ import { Mail, Lock, Loader2 } from "lucide-react";
 import { loginSchema, type LoginFormData } from "@/lib/zodSchema";
 import { useFormState } from "react-dom";
 import { authenticate } from "@/actions/authActions";
-import { useLocale, useTranslations } from "next-intl";
+import {  useTranslations } from "next-intl";
 
 type LoginFormProps = {
   children: React.ReactNode;
@@ -19,7 +19,6 @@ type LoginFormProps = {
 
 export function LoginForm({ children }: LoginFormProps) {
   const t = useTranslations("LoginPage");
-  const locale = useLocale();
   const [state, formAction] = useFormState(authenticate, undefined);
   const {
     register,
@@ -116,7 +115,7 @@ export function LoginForm({ children }: LoginFormProps) {
         {t("noAccount")}{" "}
         <Link
           className="font-medium text-primary hover:underline"
-          href={`/${locale}/register`} 
+          href={`/register`} 
         >
           {t("signUp")}
         </Link>

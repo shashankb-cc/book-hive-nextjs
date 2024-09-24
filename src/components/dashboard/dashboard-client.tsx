@@ -19,7 +19,6 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { BorrowConfirmationDialog } from "@/components/dashboard/borrow-confirmation";
 import Image from "next/image";
-import { LanguageSwitcher } from "@/components/language-swicher";
 
 import { toast } from "@/hooks/use-toast";
 import {
@@ -29,6 +28,7 @@ import {
 } from "@/actions/favoriteActions";
 import { borrowBook } from "@/actions/transactionActions";
 import { useTranslations } from "next-intl";
+import LocaleSwitcher from "@/components/localSwitcher";
 
 interface DashboardProps {
   books: IBook[];
@@ -218,8 +218,8 @@ export default function Dashboard({
             <div className="w-[200px] h-10">
               <SearchInput placeholder={t("searchPlaceholder")} />
             </div>
-            <div className="w-[180px] h-10">
-              <LanguageSwitcher />
+            <div>
+              <LocaleSwitcher />
             </div>
             <UserDropdown />
           </div>
