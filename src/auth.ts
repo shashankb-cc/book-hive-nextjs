@@ -70,27 +70,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const user = auth?.user.email;
-      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-      const isOnAdminDashboard =
-        nextUrl.pathname.startsWith("/admin-dashboard");
-      const isOnLoginPage = nextUrl.pathname === "/login";
-      const userRole = auth?.user.role;
-      console.log("user role is", userRole);
-
-      if (isOnAdminDashboard) {
-        if (isLoggedIn && userRole === "librarian") return true;
-        return Response.redirect(new URL("/dashboard", nextUrl));
-      } else if (isOnLoginPage) {
-        if (isLoggedIn) {
-          return Response.redirect(new URL("/dashboard", nextUrl));
-        }
-        return true;
-      }
-      return true;
-    },
     async jwt({ token, user }) {
       if (user) {
         token.role = (user as any).role;
