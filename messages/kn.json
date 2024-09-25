@@ -229,7 +229,9 @@
     "from": "ಇಂದ:",
     "to": "ವರೆಗೆ:",
     "professor": "ಪ್ರಾಧ್ಯಾಪಕ:",
-    "joinGoogleMeet": "Google Meet ಗೆ ಸೇರಿ"
+    "joinGoogleMeet": "Google Meet ಗೆ ಸೇರಿ",
+    "cancelMeeting": "ಸಭೆ ರದ್ದುಮಾಡಿ",
+    "rescheduleMeeting": "ಮರುನಿಗದಿ"
   },
   "ProfessorList": {
     "ourProfessor": "ನಮ್ಮ ಪ್ರಾಧ್ಯಾಪಕರು",
@@ -248,5 +250,24 @@
     "title": "ನಿಮ್ಮ ಸಭೆಯನ್ನು ನಿಗದಿಪಡಿಸಿ",
     "noCalendlyLink": "ಈ ಪ್ರಾಧ್ಯಾಪಕರಿಗೆ Calendly ಲಿಂಕ್ ಲಭ್ಯವಿಲ್ಲ.",
     "meetingDuration": "60 ನಿಮಿಷಗಳ ಸಭೆ"
+  },
+  "EventActions": {
+    "cancelMeeting": "ಸಭೆ ರದ್ದುಮಾಡಿ",
+    "rescheduleMeeting": "ಮರುನಿಗದಿ",
+    "confirmCancel": "ರದ್ದುಗೊಳಿಸುವಿಕೆಯನ್ನು ದೃಢೀಕರಿಸಿ",
+    "cancelDescription": "ಈ ಸಭೆಯನ್ನು ರದ್ದುಮಾಡಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?",
+    "keepMeeting": "ಸಭೆ ಇರಿಸಿಕೊಳ್ಳಿ",
+    "confirmCancelAction": "ಹೌದು, ಸಭೆ ರದ್ದುಮಾಡಿ",
+    "rescheduleTitle": "ಸಭೆ ಮರುನಿಗದಿ",
+    "rescheduleDescription": "ಸಭೆಗೆ ಹೊಸ ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "cancel": "ರದ್ದುಮಾಡಿ",
+    "confirmReschedule": "ಮರುನಿಗದಿ ದೃಢೀಕರಿಸಿ",
+    "cancelSuccess": "ಸಭೆ ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ",
+    "eventCancelled": "ಸಭೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ.",
+    "cancelError": "ರದ್ದುಗೊಳಿಸುವ ದೋಷ",
+    "rescheduleSuccess": "ಸಭೆ ಮರುನಿಗದಿಯಾಗಿದೆ",
+    "eventRescheduled": "ಸಭೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಮರುನಿಗದಿ ಮಾಡಲಾಗಿದೆ.",
+    "rescheduleError": "ಮರುನಿಗದಿ ದೋಷ",
+    "errorOccurred": "ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
   }
 }
