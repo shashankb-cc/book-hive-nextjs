@@ -1,6 +1,6 @@
 import SideNav from "@/components/side-nav";
 import * as LucideIcons from "lucide-react";
-import {  useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 export function UserNavBar() {
   const t = useTranslations("UserNavBar");
@@ -19,6 +19,8 @@ export function UserNavBar() {
     },
     { name: t("favorites"), href: `/favorites`, icon: "Heart" },
     { name: t("dueSoon"), href: `/due-soon`, icon: "Clock" },
+    { name: t("professors"), href: `/professors`, icon: "Calendar" },
+    { name: t("meetings"), href: `/my-meetings`, icon: "Presentation" },
   ];
 
   return <SideNav title={t("title")} navItems={userNavItems} />;
