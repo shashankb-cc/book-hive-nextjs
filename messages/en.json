@@ -229,7 +229,9 @@
     "from": "From:",
     "to": "To:",
     "professor": "Professor:",
-    "joinGoogleMeet": "Join Google Meet"
+    "joinGoogleMeet": "Join Google Meet",
+    "cancelMeeting": "Cancel Meeting",
+    "rescheduleMeeting": "Reschedule"
   },
   "ProfessorList": {
     "ourProfessor": "Our Professors",
@@ -248,5 +250,24 @@
     "title": "Schedule Your Meeting",
     "noCalendlyLink": "No Calendly link available for this professor.",
     "meetingDuration": "60 minutes meeting"
-  }
+  },
+  "EventActions": {
+    "cancelMeeting": "Cancel Meeting",
+    "rescheduleMeeting": "Reschedule",
+    "confirmCancel": "Confirm Cancellation",
+    "cancelDescription": "Are you sure you want to cancel this meeting?",
+    "keepMeeting": "Keep Meeting",
+    "confirmCancelAction": "Yes, Cancel Meeting",
+    "rescheduleTitle": "Reschedule Meeting",
+    "rescheduleDescription": "Select a new date for the meeting",
+    "cancel": "Cancel",
+    "confirmReschedule": "Confirm Reschedule",
+    "cancelSuccess": "Meeting Cancelled",
+    "eventCancelled": "The meeting has been successfully cancelled.",
+    "cancelError": "Cancellation Error",
+    "rescheduleSuccess": "Meeting Rescheduled",
+    "eventRescheduled": "The meeting has been successfully rescheduled.",
+    "rescheduleError": "Reschedule Error",
+    "errorOccurred": "An error occurred. Please try again."
+  } 
 }
