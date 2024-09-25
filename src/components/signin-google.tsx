@@ -8,7 +8,7 @@ export async function SignInGoogle() {
     <form
       action={async () => {
         "use server";
-        await signIn("google", { callbackUrl: "/dashboard" });
+        await signIn("google", { redirectTo: "/dashboard" });
       }}
     >
       <Button variant="outline" type="submit" className="w-full">

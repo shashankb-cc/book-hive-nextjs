@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as LucideIcons from "lucide-react";
 import { handleSignOut } from "@/actions/authActions";
+import { useTranslations } from "next-intl";
 
 type IconName = keyof typeof LucideIcons;
 
@@ -24,6 +25,7 @@ const SideNavBar = ({
 }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations("ProfilePage");
 
   return (
     <div
@@ -77,7 +79,7 @@ const SideNavBar = ({
               className="w-full justify-start text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <LogOut className="w-5 h-5 mr-2" />
-              {isOpen && <span>Sign Out</span>}
+              {isOpen && <span>{t("logOut")}</span>}
             </Button>
           </form>
         </div>

@@ -1,4 +1,3 @@
-// app/dashboard/DashboardClientPage.tsx (Client Component)
 "use client";
 
 import { useState } from "react";
@@ -12,8 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"; // Beautiful button component
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface Event {
   uri: string;
@@ -22,7 +22,7 @@ interface Event {
   end_time: string;
   status: string;
   event_memberships: {
-    user_name: string; // Professor name
+    user_name: string;
     user_email: string;
   }[];
   location: { type: string; status: string; join_url?: string };
@@ -33,13 +33,13 @@ interface MeetingsClientPageProps {
 }
 
 export default function MeetingClientPage({ events }: MeetingsClientPageProps) {
+  const t = useTranslations("MeetingClientPage");
+
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Your Scheduled Events</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
       {events.length === 0 ? (
-        <p className="text-center text-gray-500">
-          You have no scheduled events.
-        </p>
+        <p className="text-center text-gray-500">{t("noEvents")}</p>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence>
@@ -55,7 +55,6 @@ export default function MeetingClientPage({ events }: MeetingsClientPageProps) {
                   transition={{ duration: 0.3 }}
                 >
                   <Card className="h-full flex flex-col shadow-lg rounded-lg border border-gray-200 relative border-t-blue-700 border-t-4">
-                    {/* Status Indicator */}
                     <div
                       className={`absolute top-2 right-2 px-2 py-1 text-xs rounded-full ${
                         isActive
@@ -63,7 +62,7 @@ export default function MeetingClientPage({ events }: MeetingsClientPageProps) {
                           : "bg-red-100 text-red-600"
                       }`}
                     >
-                      {isActive ? "Active" : "Inactive"}
+                      {isActive ? t("active") : t("inactive")}
                     </div>
                     <CardHeader className="p-4 bg-gray-50 rounded-t-lg">
                       <CardTitle className="text-xl font-semibold text-gray-800">
@@ -72,11 +71,10 @@ export default function MeetingClientPage({ events }: MeetingsClientPageProps) {
                     </CardHeader>
                     <CardContent className="p-4">
                       <CardDescription>
-                        {/* Event Timing */}
                         <div className="mb-2">
                           <div className="flex items-center space-x-2 mb-1">
                             <Calendar className="w-4 h-4 text-gray-500" />
-                            <span className="text-gray-600">From:</span>
+                            <span className="text-gray-600">{t("from")}</span>
                           </div>
                           <span className="pl-6 text-gray-800">
                             {format(new Date(event.start_time), "PPPp")}
@@ -85,18 +83,18 @@ export default function MeetingClientPage({ events }: MeetingsClientPageProps) {
                         <div className="mb-2">
                           <div className="flex items-center space-x-2 mb-1">
                             <Clock className="w-4 h-4 text-gray-500" />
-                            <span className="text-gray-600">To:</span>
+                            <span className="text-gray-600">{t("to")}</span>
                           </div>
                           <span className="pl-6 text-gray-800">
                             {format(new Date(event.end_time), "PPPp")}
                           </span>
                         </div>
-
-                        {/* Professor/Organizer */}
                         <div className="mt-4">
                           <div className="flex items-center space-x-2 mb-1">
                             <User className="w-4 h-4 text-gray-500" />
-                            <span className="text-gray-600">Professor:</span>
+                            <span className="text-gray-600">
+                              {t("professor")}
+                            </span>
                           </div>
                           <span className="pl-6 text-gray-800">
                             {event.event_memberships[0]?.user_name}
@@ -104,8 +102,6 @@ export default function MeetingClientPage({ events }: MeetingsClientPageProps) {
                         </div>
                       </CardDescription>
                     </CardContent>
-
-                    {/* Join Button */}
                     {isActive &&
                       event.location.type === "google_conference" && (
                         <div className="px-4 py-2 mt-auto">
@@ -116,7 +112,7 @@ export default function MeetingClientPage({ events }: MeetingsClientPageProps) {
                             className="w-full"
                           >
                             <Button className="w-full bg-blue-600 text-white hover:bg-blue-700">
-                              Join Google Meet
+                              {t("joinGoogleMeet")}
                             </Button>
                           </Link>
                         </div>

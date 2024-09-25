@@ -1,6 +1,5 @@
 import { LoginForm } from "@/components/login-form";
 import { SignInGoogle } from "@/components/signin-google";
-import { useTranslations } from "next-intl";
 import { unstable_setRequestLocale } from "next-intl/server";
 
 type LoginPageProps = {
