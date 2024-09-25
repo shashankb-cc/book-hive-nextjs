@@ -203,12 +203,14 @@
     }
   },
   "UserNavBar": {
-    "title": "ಪುಸ್ತಕ ಜೇನುಗೂಡು",
+    "title": "ಪುಸ್ತಕ ಮುಖಪುಟ",
     "home": "ಮುಖಪುಟ",
     "myBooks": "ನನ್ನ ಪುಸ್ತಕಗಳು",
     "borrowingHistory": "ಎರವಲು ಇತಿಹಾಸ",
     "favorites": "ಮೆಚ್ಚಿನವುಗಳು",
-    "dueSoon": "ಶೀಘ್ರದಲ್ಲಿ ಮರಳಿಸಬೇಕಾದವು"
+    "dueSoon": "ಶೀಘ್ರದಲ್ಲಿ ಮರಳಿಸಬೇಕಾದವು",
+    "professors": "ನನ್ನ ಪ್ರಾಧ್ಯಾಪಕರು",
+    "meetings": "ನನ್ನ ನೇಮಕಾತಿಗಳು"
   },
   "UserDropdown": {
     "viewProfile": "ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ",
@@ -218,5 +220,33 @@
     "kn": "ಕನ್ನಡ",
     "en": "English",
     "label": "ಭಾಷೆ"
+  },
+  "MeetingClientPage": {
+    "title": "ನಿಮ್ಮ ನಿಗದಿತ ಕಾರ್ಯಕ್ರಮಗಳು",
+    "noEvents": "ನಿಮಗೆ ಯಾವುದೇ ನಿಗದಿತ ಕಾರ್ಯಕ್ರಮಗಳಿಲ್ಲ.",
+    "active": "ಸಕ್ರಿಯ",
+    "inactive": "ನಿಷ್ಕ್ರಿಯ",
+    "from": "ಇಂದ:",
+    "to": "ವರೆಗೆ:",
+    "professor": "ಪ್ರಾಧ್ಯಾಪಕ:",
+    "joinGoogleMeet": "Google Meet ಗೆ ಸೇರಿ"
+  },
+  "ProfessorList": {
+    "ourProfessor": "ನಮ್ಮ ಪ್ರಾಧ್ಯಾಪಕರು",
+    "title": "ನಮ್ಮ ಪ್ರಾಧ್ಯಾಪಕರನ್ನು ಭೇಟಿ ಮಾಡಿ",
+    "subtitle": "ನಮ್ಮ ವಿಶ್ವದರ್ಜೆಯ ಸಿಬ್ಬಂದಿಯನ್ನು ಕಂಡುಹಿಡಿಯಿರಿ ಮತ್ತು ಸಂಪರ್ಕಿಸಿ. ಸಭೆಯನ್ನು ನಿಗದಿಪಡಿಸಿ ಮತ್ತು ನಿಮ್ಮ ಶೈಕ್ಷಣಿಕ ಯಶಸ್ಸಿನ ಕಡೆಗೆ ಮೊದಲ ಹೆಜ್ಜೆ ಇಡಿ.",
+    "searchLabel": "ಪ್ರಾಧ್ಯಾಪಕರನ್ನು ಹುಡುಕಿ",
+    "searchPlaceholder": "ಹೆಸರಿನಿಂದ ಹುಡುಕಿ...",
+    "departmentLabel": "ವಿಭಾಗ",
+    "departmentPlaceholder": "ವಿಭಾಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "allDepartments": "ಎಲ್ಲಾ ವಿಭಾಗಗಳು",
+    "scheduleMeeting": "ಸಭೆ ನಿಗದಿಪಡಿಸಿ",
+    "noCalendlyLink": "Calendly ಲಿಂಕ್ ಲಭ್ಯವಿಲ್ಲ"
+  },
+  "ProfessorSchedule": {
+    "notFound": "ಪ್ರಾಧ್ಯಾಪಕರು ಕಂಡುಬಂದಿಲ್ಲ",
+    "title": "ನಿಮ್ಮ ಸಭೆಯನ್ನು ನಿಗದಿಪಡಿಸಿ",
+    "noCalendlyLink": "ಈ ಪ್ರಾಧ್ಯಾಪಕರಿಗೆ Calendly ಲಿಂಕ್ ಲಭ್ಯವಿಲ್ಲ.",
+    "meetingDuration": "60 ನಿಮಿಷಗಳ ಸಭೆ"
   }
 }

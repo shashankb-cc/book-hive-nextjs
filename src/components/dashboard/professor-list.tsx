@@ -13,8 +13,10 @@ import { toast } from "@/hooks/use-toast"
 import { getProfessors } from "@/actions/professorActions"
 import { IProfessor } from "@/lib/models"
 import { CalendlyModal } from "@/components/dashboard/calendly-modal"
+import { useTranslations } from "next-intl"
 
 export default function ProfessorList() {
+  const t = useTranslations("ProfessorList")
   const [professors, setProfessors] = useState<IProfessor[]>([])
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState("")
@@ -59,10 +61,10 @@ export default function ProfessorList() {
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-16 px-4 sm:px-6 lg:px-8 rounded-lg shadow-xl">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-            Meet Our Professors
+            {t("title")}
           </h1>
           <p className="mt-6 text-xl max-w-3xl">
-            Discover and connect with our world-class faculty. Schedule a meeting and take the first step towards your academic success.
+            {t("subtitle")}
           </p>
         </div>
       </div>
@@ -70,12 +72,12 @@ export default function ProfessorList() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="flex-1">
-            <Label htmlFor="search" className="text-lg font-semibold mb-2">Search Professors</Label>
+            <Label htmlFor="search" className="text-lg font-semibold mb-2">{t("searchLabel")}</Label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input
                 id="search"
-                placeholder="Search by name..."
+                placeholder={t("searchPlaceholder")}
                 value={search}
                 onChange={handleSearchChange}
                 className="pl-10 pr-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -83,13 +85,13 @@ export default function ProfessorList() {
             </div>
           </div>
           {/* <div className="w-full md:w-64">
-            <Label htmlFor="department" className="text-lg font-semibold mb-2">Department</Label>
+            <Label htmlFor="department" className="text-lg font-semibold mb-2">{t("departmentLabel")}</Label>
             <Select onValueChange={handleDepartmentChange} value={department}>
               <SelectTrigger id="department" className="border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                <SelectValue placeholder="Select department" />
+                <SelectValue placeholder={t("departmentPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Departments</SelectItem>
+                <SelectItem value="">{t("allDepartments")}</SelectItem>
                 <SelectItem value="Computer Science">Computer Science</SelectItem>
                 <SelectItem value="Mathematics">Mathematics</SelectItem>
                 <SelectItem value="Physics">Physics</SelectItem>
@@ -124,11 +126,11 @@ export default function ProfessorList() {
                       className="inline-flex items-center justify-center w-full rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-10 px-4 py-2"
                     >
                       <Calendar className="mr-2" />
-                      Schedule Meeting
+                      {t("scheduleMeeting")}
                     </Link>
                   ) : (
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      No Calendly link available
+                      {t("noCalendlyLink")}
                     </p>
                   )}
                 </CardFooter>

@@ -14,7 +14,11 @@ import { registerSchema, type RegisterFormData } from "@/lib/zodSchema";
 import { createMember } from "@/actions/memberActions";
 import { useTranslations } from "next-intl";
 
-export function RegisterForm() {
+type RegisterFormProps = {
+  children: React.ReactNode;
+};
+
+export function RegisterForm({ children }: RegisterFormProps) {
   const router = useRouter();
   const t = useTranslations("RegisterPage");
   const [serverError, setServerError] = useState<string | null>(null);
@@ -188,7 +192,8 @@ export function RegisterForm() {
               className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 dark:text-gray-400"
               onClick={togglePasswordVisibility}
             >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />} {/* Eye toggle */}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}{" "}
+              {/* Eye toggle */}
             </div>
           </div>
           {errors.password && (
@@ -219,10 +224,7 @@ export function RegisterForm() {
           </span>
         </div>
       </div>
-      <Button variant="outline" type="button" className="w-full">
-        <Icons.google className="mr-2 h-4 w-4" />
-        {t("google")}
-      </Button>
+      {children}
       <p className="text-center text-sm text-gray-500 dark:text-gray-400">
         {t("haveAccount")}{" "}
         <Link

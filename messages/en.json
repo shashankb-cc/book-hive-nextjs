@@ -208,7 +208,9 @@
     "myBooks": "My Books",
     "borrowingHistory": "Borrowing History",
     "favorites": "Favorites",
-    "dueSoon": "Due Soon"
+    "dueSoon": "Due Soon",
+    "professors": "My Professors",
+    "meetings": "My Appointments"
   },
   "UserDropdown": {
     "viewProfile": "View Profile",
@@ -218,5 +220,33 @@
     "kn": "Kannada",
     "en": "English",
     "label": "Language"
+  },
+  "MeetingClientPage": {
+    "title": "Your Scheduled Events",
+    "noEvents": "You have no scheduled events.",
+    "active": "Active",
+    "inactive": "Inactive",
+    "from": "From:",
+    "to": "To:",
+    "professor": "Professor:",
+    "joinGoogleMeet": "Join Google Meet"
+  },
+  "ProfessorList": {
+    "ourProfessor": "Our Professors",
+    "title": "Meet Our Professors",
+    "subtitle": "Discover and connect with our world-class faculty. Schedule a meeting and take the first step towards your academic success.",
+    "searchLabel": "Search Professors",
+    "searchPlaceholder": "Search by name...",
+    "departmentLabel": "Department",
+    "departmentPlaceholder": "Select department",
+    "allDepartments": "All Departments",
+    "scheduleMeeting": "Schedule Meeting",
+    "noCalendlyLink": "No Calendly link available"
+  },
+  "ProfessorSchedule": {
+    "notFound": "Professor not found",
+    "title": "Schedule Your Meeting",
+    "noCalendlyLink": "No Calendly link available for this professor.",
+    "meetingDuration": "60 minutes meeting"
   }
 }

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { IProfessor } from "@/lib/models";
 import { GraduationCap, Mail, Clock } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ProfessorScheduleClientProps {
   professor: IProfessor;
@@ -24,6 +25,8 @@ export default function ProfessorScheduleClient({
   professor,
   prefill,
 }: ProfessorScheduleClientProps) {
+  const t = useTranslations("ProfessorSchedule");
+
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
@@ -49,7 +52,7 @@ export default function ProfessorScheduleClient({
               </div>
               <div className="flex items-center">
                 <Clock className="mr-2 text-gray-500" />
-                <span className="text-gray-600">60 minutes meeting</span>
+                <span className="text-gray-600">{t("meetingDuration")}</span>
               </div>
             </div>
             <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -64,9 +67,7 @@ export default function ProfessorScheduleClient({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <h2 className="text-3xl font-bold mb-6 text-center">
-          Schedule Your Meeting
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-center">{t("title")}</h2>
         {professor.calendly_link ? (
           <Card className="overflow-hidden shadow-lg">
             <CardContent className="p-0">
@@ -81,7 +82,7 @@ export default function ProfessorScheduleClient({
           </Card>
         ) : (
           <p className="text-center text-xl text-gray-500">
-            No Calendly link available for this professor.
+            {t("noCalendlyLink")}
           </p>
         )}
       </motion.div>
