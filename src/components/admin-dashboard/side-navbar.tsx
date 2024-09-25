@@ -25,6 +25,11 @@ export function AdminNavBar() {
       href: "/admin-dashboard/transactions",
       icon: "ArrowRightLeft",
     },
+    {
+      name: "Our Professors",
+      href: "/admin-dashboard/professors",
+      icon: "PersonStanding",
+    },
   ];
 
   return <SideNav title="Admin Panel" navItems={adminNavItems} />;
