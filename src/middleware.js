@@ -10,6 +10,9 @@ export async function middleware(req) {
 
   const { pathname } = req.nextUrl;
 
+  // Dynamically getting the base URL from the request
+  const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
+
   // Allow access to public routes
   if (pathname === "/" || pathname === "/login" || pathname === "/register") {
     return NextResponse.next();
@@ -17,24 +20,20 @@ export async function middleware(req) {
 
   // If token is missing, redirect to login
   if (!token) {
-    return NextResponse.redirect(
-      new URL("https://bookhive-app.vercel.app/login", req.url)
-    );
+    return NextResponse.redirect(new URL(`${baseUrl}/login`, req.url));
   }
 
   // Role-based access control for admin-dashboard
   if (pathname.startsWith("/admin-dashboard")) {
     if (token.role !== "librarian") {
-      return NextResponse.redirect(
-        new URL("https://bookhive-app.vercel.app/dashboard", req.url)
-      );
+      return NextResponse.redirect(new URL(`${baseUrl}/dashboard`, req.url));
     }
   }
 
   // Redirect librarian users accessing /dashboard to /admin-dashboard
   if (pathname === "/dashboard" && token.role === "librarian") {
     return NextResponse.redirect(
-      new URL("https://bookhive-app.vercel.app/admin-dashboard", req.url)
+      new URL(`${baseUrl}/admin-dashboard`, req.url)
     );
   }
 

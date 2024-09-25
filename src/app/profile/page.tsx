@@ -285,7 +285,7 @@ export default function ProfilePage({ params: { locale } }: ProfilePageProps) {
               </CardContent>
             </Card>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link href="/borrowed-books" className="block h-full">
+              <Link href="/collection" className="block h-full">
                 <Card className="h-full hover:bg-accent transition-colors cursor-pointer">
                   <CardContent className="p-4 flex items-center h-full">
                     <Book className="h-8 w-8 mr-4 flex-shrink-0" />
@@ -298,7 +298,7 @@ export default function ProfilePage({ params: { locale } }: ProfilePageProps) {
                   </CardContent>
                 </Card>
               </Link>
-              <Link href="/reading-history" className="block h-full">
+              <Link href="/transactions" className="block h-full">
                 <Card className="h-full hover:bg-accent transition-colors cursor-pointer">
                   <CardContent className="p-4 flex items-center h-full">
                     <Clock className="h-8 w-8 mr-4 flex-shrink-0" />
