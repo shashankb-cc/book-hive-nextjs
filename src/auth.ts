@@ -26,7 +26,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       profile(profile) {
         return {
           ...profile,
-          role: "librarian",
+          role: "member",
         };
       },
     }),
@@ -38,10 +38,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          console.log("email password", email, password);
           try {
             const member = await findUserByEmail(email);
-            console.log("member0", member);
             if (!member) {
               console.log("User not found");
               return null;
@@ -50,10 +48,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               password,
               member.password
             );
-            console.log("Passwords match:", passwordsMatch);
             if (passwordsMatch) {
               const user = mapMemberToUser(member);
-              console.log("Mapped user:", user);
               return user;
             } else {
               console.log("Password does not match");
