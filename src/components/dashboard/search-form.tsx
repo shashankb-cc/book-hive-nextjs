@@ -13,7 +13,7 @@ export default function SearchInput({ placeholder }: { placeholder: string }) {
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set("search", term);
+      params.set("search", term.toLocaleLowerCase());
       params.set("page", "1");
     } else {
       params.delete("search");
@@ -31,7 +31,7 @@ export default function SearchInput({ placeholder }: { placeholder: string }) {
           handleSearch(e.target.value);
         }}
         defaultValue={searchParams.get("search")?.toString()}
-        className="pl-8 w-full sm:w-[200px]"
+        className="w-11/12 h-10 px-8 text-md rounded-md border-2 border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
       />
     </div>
   );

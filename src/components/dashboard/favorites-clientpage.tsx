@@ -8,6 +8,7 @@ import { removeFavorite } from "@/actions/favoriteActions";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface FavoritesClientProps {
   initialFavorites: any[];
@@ -103,9 +104,11 @@ export default function FavoritesClient({
               <p className="text-gray-500 text-center text-lg max-w-md">
                 {t("noFavoritesMessage")}
               </p>
-              <Button className="mt-8" variant="outline" size="lg">
-                {t("exploreBooks")}
-              </Button>
+              <Link href={"/dashboard"}>
+                <Button className="mt-8" variant="outline" size="lg">
+                  {t("exploreBooks")}
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </motion.div>

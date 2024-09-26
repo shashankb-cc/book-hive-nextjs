@@ -93,8 +93,8 @@ export interface ITransactionBase {
 
 export interface ITransaction extends ITransactionBase {
   id: number;
-  issueDate: string;
-  dueDate: string;
+  issueDate: string | null;
+  dueDate: string | null;
   returnDate: string | null;
   status: TStatus;
 }

@@ -12,8 +12,8 @@ export interface DueTransactions {
   id: number;
   memberId: number;
   bookId: number;
-  issueDate: string;
-  dueDate: string;
+  issueDate: string | null;
+  dueDate: string | null;
   returnDate: string | null;
   status: string;
   bookTitle: string;
@@ -28,15 +28,10 @@ export class TransactionRepository {
 
   async create(data: ITransactionBase) {
     try {
-      const currentDate = new Date();
-      const dueDays = 14;
-      const dueDate = new Date(currentDate);
-      dueDate.setDate(currentDate.getDate() + dueDays);
-
       const transaction: Omit<ITransaction, "id"> = {
         ...data,
-        issueDate: formatDate(currentDate),
-        dueDate: formatDate(dueDate),
+        issueDate: null,
+        dueDate: null,
         returnDate: null,
         status: "pending",
       };
@@ -149,7 +144,7 @@ export class TransactionRepository {
   }> {
     const today = formatDate(new Date());
     const todaysDate = today.split(",");
-    const trimmedDate = todaysDate[1].trim(); 
+    const trimmedDate = todaysDate[1].trim();
 
     try {
       const allIssuedTransactions = await this.db
@@ -170,14 +165,14 @@ export class TransactionRepository {
         .where(eq(transactions.status, "issued"));
 
       const dueToday = allIssuedTransactions.filter((transaction) => {
-        const transactionDueDate = transaction.dueDate.split(",")[1].trim();
+        const transactionDueDate = transaction.dueDate?.split(",")[1].trim();
         return transactionDueDate === trimmedDate;
       });
 
       const overdueTransactions = allIssuedTransactions.filter(
         (transaction) => {
-          const transactionDueDate = transaction.dueDate.split(",")[1].trim();
-          return transactionDueDate < trimmedDate;
+          const transactionDueDate = transaction.dueDate?.split(",")[1].trim();
+          return transactionDueDate! < trimmedDate;
         }
       );
 
@@ -251,12 +246,12 @@ export class TransactionRepository {
         .orderBy(transactions.dueDate);
 
       const dueSoon = allTransactions.filter((transaction) => {
-        const dueDate = new Date(transaction.dueDate);
+        const dueDate = new Date(transaction.dueDate!);
         return dueDate >= today && dueDate <= sevenDaysFromNow;
       });
 
       const overdue = allTransactions.filter((transaction) => {
-        const dueDate = new Date(transaction.dueDate);
+        const dueDate = new Date(transaction?.dueDate!);
         return dueDate < today;
       });
 
@@ -321,9 +316,9 @@ export class TransactionRepository {
       id: number;
       bookTitle: string;
       memberName: string;
-      issueDate: string;
-      dueDate: string;
-      status: string;
+      issueDate: string | null;
+      dueDate: string | null;
+      status: "pending" | "issued" | "rejected" | "returned";
     }[]
   > {
     try {
@@ -359,6 +354,10 @@ export class TransactionRepository {
     status: "issued" | "rejected"
   ): Promise<{ success: boolean; message: string }> {
     try {
+      const currentDate = new Date();
+      const dueDays = 14;
+      const dueDate = new Date(currentDate);
+      dueDate.setDate(currentDate.getDate() + dueDays);
       return await this.db.transaction(async (tx) => {
         const [transaction] = await tx
           .select()
@@ -380,10 +379,15 @@ export class TransactionRepository {
           if (book.availableNumberOfCopies < 1) {
             return { success: false, message: "Book is out of stock" };
           }
-
+          console.log("helo moto");
+          console.log("cy", formatDate(currentDate), formatDate(dueDate));
           await tx
             .update(transactions)
-            .set({ status })
+            .set({
+              issueDate: formatDate(currentDate),
+              dueDate: formatDate(dueDate),
+              status: "issued",
+            })
             .where(eq(transactions.id, id));
 
           await tx
@@ -423,7 +427,15 @@ export class TransactionRepository {
         })
         .from(transactions)
         .innerJoin(books, eq(transactions.bookId, books.id))
-        .where(eq(transactions.memberId, userId));
+        .where(
+          and(
+            eq(transactions.memberId, userId),
+            or(
+              eq(transactions.status, "issued"),
+              eq(transactions.status, "pending")
+            )
+          )
+        );
 
       return requests;
     } catch (error) {
