@@ -16,7 +16,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Pagination from "@/components/dashboard/pagination"; // Using the new Pagination component
+import Pagination from "@/components/dashboard/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DueTransactions } from "@/repositories/transactionRepository";
 
 interface Transaction {
   id: number;
@@ -28,7 +36,7 @@ interface Transaction {
 }
 
 interface HistoryClientProps {
-  initialTransactions: Transaction[];
+  initialTransactions: DueTransactions[];
 }
 
 export default function HistoryClient({
@@ -36,16 +44,21 @@ export default function HistoryClient({
 }: HistoryClientProps) {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState<string>("all");
   const t = useTranslations("Transactions");
   const itemsPerPage = 10;
 
+  const filteredTransactions = transactions.filter(
+    (transaction) => filter === "all" || transaction.status === filter
+  );
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentTransactions = transactions.slice(
+  const currentTransactions = filteredTransactions.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
-  const totalPages = Math.ceil(transactions.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -54,7 +67,21 @@ export default function HistoryClient({
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-4xl font-bold text-center mb-6">{t("title")}</h1>
-      {transactions && transactions.length > 0 ? (
+      <div className="flex justify-end mb-6">
+        <Select value={filter} onValueChange={setFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder={t("filterByStatus")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("allStatuses")}</SelectItem>
+            <SelectItem value="pending">{t("pending")}</SelectItem>
+            <SelectItem value="issued">{t("issued")}</SelectItem>
+            <SelectItem value="returned">{t("returned")}</SelectItem>
+            <SelectItem value="rejected">{t("rejected")}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      {filteredTransactions && filteredTransactions.length > 0 ? (
         <Card>
           <CardContent>
             <div className="overflow-x-auto">
@@ -74,20 +101,32 @@ export default function HistoryClient({
                       <TableCell>{transaction.bookTitle}</TableCell>
                       <TableCell>
                         <Badge
-                          variant={
-                            transaction.status === "returned"
-                              ? "secondary"
-                              : "destructive"
-                          }
+                          className={`
+                                    ${
+                                      transaction.status === "returned"
+                                        ? "bg-gray-500"
+                                        : transaction.status === "pending"
+                                        ? "bg-yellow-500"
+                                        : transaction.status === "issued"
+                                        ? "bg-green-500"
+                                        : transaction.status === "rejected"
+                                        ? "bg-red-500"
+                                        : ""
+                                    }
+                                    `}
                         >
                           {t(`status.${transaction.status}`)}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {formatDate(new Date(transaction.issueDate))}
+                        {transaction.issueDate
+                          ? formatDate(new Date(transaction.issueDate))
+                          : "-"}
                       </TableCell>
                       <TableCell>
-                        {formatDate(new Date(transaction.dueDate))}
+                        {transaction.dueDate
+                          ? formatDate(new Date(transaction.dueDate))
+                          : "-"}
                       </TableCell>
                       <TableCell>
                         {transaction.returnDate

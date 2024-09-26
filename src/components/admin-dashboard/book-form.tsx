@@ -118,7 +118,7 @@ export default function BookForm({ book }: BookFormProps) {
             (book ? "Book updated successfully" : "Book created successfully"),
           className: "bg-green-400 text-white",
         });
-        router.push("/admin-dashboard/books");
+        router.push("/admin-dashboard");
       }
     } catch (error) {
       console.error("Error submitting form:", error);

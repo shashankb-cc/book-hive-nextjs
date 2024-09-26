@@ -20,8 +20,8 @@ interface Transaction {
   id: number;
   bookTitle: string;
   memberName: string;
-  issueDate: string;
-  dueDate: string;
+  issueDate: string | null;
+  dueDate: string | null;
 }
 
 interface ActiveTransactionsProps {

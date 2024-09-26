@@ -71,7 +71,8 @@
     "success": "Success",
     "passwordMismatch": "New passwords do not match",
     "loading": "Loading...",
-    "profileLoadError": "Error: Unable to load user profile"
+    "profileLoadError": "Error: Unable to load user profile",
+    "back": "Back"
   },
   "HomePage": {
     "header": {
@@ -165,6 +166,8 @@
   },
   "DueSoon": {
     "title": "Books Due Soon",
+    "overdue": "Overdue",
+    "tobeReturned": "Return",
     "overdueTitle": "Overdue Books",
     "showDueSoon": "Show Due Soon",
     "showOverdue": "Show Overdue",
@@ -183,7 +186,8 @@
     "removeFromFavorites": "Remove from Favorites",
     "author": "Author",
     "genre": "Genre",
-    "isbn": "ISBN"
+    "isbn": "ISBN",
+    "exploreBooks": "Explore Books"
   },
   "Transactions": {
     "title": "Transaction History",
@@ -194,12 +198,18 @@
     "due": "Due",
     "returned": "Returned",
     "bookTitle": "Book Title",
+    "allRequests": "All Requests",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "allStatuses": "All Status",
+    "filterByStatus": "Filter by Status",
     "status": {
       "name": "Status",
       "returned": "Returned",
       "overdue": "Overdue",
       "borrowed": "Borrowed",
-      "issued": "Issued"
+      "issued": "Issued",
+      "pending": "Pending"
     }
   },
   "UserNavBar": {
@@ -269,5 +279,5 @@
     "eventRescheduled": "The meeting has been successfully rescheduled.",
     "rescheduleError": "Reschedule Error",
     "errorOccurred": "An error occurred. Please try again."
-  } 
+  }
 }

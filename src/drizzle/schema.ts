@@ -57,8 +57,8 @@ export const transactions = pgTable("transactions", {
   memberId: integer("memberId")
     .references(() => members.id)
     .notNull(),
-  issueDate: varchar("issueDate", { length: 100 }).notNull(),
-  dueDate: varchar("dueDate", { length: 100 }).notNull(),
+  issueDate: varchar("issueDate", { length: 100 }),
+  dueDate: varchar("dueDate", { length: 100 }),
   returnDate: varchar("returnDate", { length: 100 }),
   status: statusEnum("status").notNull(),
 });

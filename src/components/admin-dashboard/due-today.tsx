@@ -101,8 +101,16 @@ export default function DueBooksDashboard({
                 {transaction.bookTitle}
               </TableCell>
               <TableCell>{transaction.memberName}</TableCell>
-              <TableCell>{formatDisplayDate(transaction.issueDate)}</TableCell>
-              <TableCell>{formatDisplayDate(transaction.dueDate)}</TableCell>
+              <TableCell>
+                {transaction.issueDate
+                  ? formatDisplayDate(transaction.issueDate)
+                  : "-"}
+              </TableCell>
+              <TableCell>
+                {transaction.dueDate
+                  ? formatDisplayDate(transaction.dueDate)
+                  : "-"}
+              </TableCell>
               <TableCell>{transaction.status}</TableCell>
               <TableCell>
                 <Dialog

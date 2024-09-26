@@ -1,5 +1,5 @@
 import { books } from "@/drizzle/schema";
-import { eq, like, or, sql, SQL } from "drizzle-orm";
+import { eq, ilike, or, sql, SQL } from "drizzle-orm";
 
 export function buildWhereConditions(
   search?: string,
@@ -9,7 +9,7 @@ export function buildWhereConditions(
 
   if (search) {
     conditions.push(
-      or(like(books.title, `%${search}%`), like(books.isbnNo, `%${search}%`))!
+      or(ilike(books.title, `%${search}%`), ilike(books.isbnNo, `%${search}%`))!
     );
   }
 

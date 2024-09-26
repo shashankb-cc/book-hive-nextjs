@@ -52,7 +52,7 @@ export default function DueSoonClient({
                     variant={showOverdue ? "destructive" : "secondary"}
                     className="bg-white text-red-500 text-center"
                   >
-                    {showOverdue ? t("overdueTitle") : t("title")}
+                    {showOverdue ? t("overdue") : t("tobeReturned")}
                   </Badge>
                 </CardTitle>
               </CardHeader>
@@ -62,13 +62,17 @@ export default function DueSoonClient({
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     <span className="text-sm">
                       {t("issued")}:{" "}
-                      {formatDate(new Date(transaction.issueDate))}
+                      {transaction.issueDate
+                        ? formatDate(new Date(transaction.issueDate))
+                        : "-"}
                     </span>
                   </div>
                   <div className="flex items-center">
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     <span className="text-sm">
-                      {t("due")}: {formatDate(new Date(transaction.dueDate))}
+                      {transaction.dueDate
+                        ? formatDate(new Date(transaction.dueDate))
+                        : "-"}
                     </span>
                   </div>
                   <div className="flex items-center">
