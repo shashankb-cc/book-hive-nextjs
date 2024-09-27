@@ -75,13 +75,13 @@ export default function AdminDashboard({
       params.delete("genre");
     }
     params.set("page", "1");
-    router.push(`/admin-dashboard/books?${params.toString()}`);
+    router.push(`/admin-dashboard?${params.toString()}`);
   };
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", page.toString());
-    router.push(`/admin-dashboard/books?${params.toString()}`);
+    router.push(`/admin-dashboard?${params.toString()}`);
   };
 
   const handleDelete = async (id: number) => {

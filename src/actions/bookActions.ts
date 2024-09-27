@@ -77,11 +77,18 @@ export async function createBook(prevState: any, formData: FormData) {
       numOfPages: parseInt(formData.get("pages") as string),
       totalNumOfCopies: parseInt(formData.get("copies") as string),
       availableNumberOfCopies: parseInt(formData.get("copies") as string),
-      price: parseInt(formData.get("price") as string),
+      price: parseInt(formData.get("price") as string) || 200,
     };
-    const imageFile = formData.get("image") as File;
 
-    const newBook = await bookRepository.createBook(bookData, imageFile);
+    const imageFile = formData.get("image") as File;
+    let imageBuffer: Buffer | undefined;
+
+    if (imageFile) {
+      const arrayBuffer = await imageFile.arrayBuffer();
+      imageBuffer = Buffer.from(arrayBuffer);
+    }
+
+    const newBook = await bookRepository.createBook(bookData, imageBuffer);
 
     revalidatePath("/admin-dashboard/dashboard");
     return { success: true, message: "Book added successfully" };
@@ -98,7 +105,6 @@ export async function updateBook(prevState: any, formData: FormData) {
       return { error: "Not authenticated" };
     }
 
-    const id = parseInt(formData.get("id") as string);
     const bookData: Partial<IBook> = {
       title: formData.get("name") as string,
       author: formData.get("author") as string,
@@ -107,10 +113,23 @@ export async function updateBook(prevState: any, formData: FormData) {
       isbnNo: formData.get("isbn") as string,
       numOfPages: parseInt(formData.get("pages") as string),
       totalNumOfCopies: parseInt(formData.get("copies") as string),
+      availableNumberOfCopies: parseInt(formData.get("copies") as string),
+      price: parseInt(formData.get("price") as string) || 200,
     };
-    const imageFile = formData.get("image") as File;
 
-    await bookRepository.updateBook(id, bookData, imageFile);
+    const imageFile = formData.get("image") as File;
+    let imageBuffer: Buffer | undefined;
+
+    if (imageFile && imageFile.size > 0) {
+      const arrayBuffer = await imageFile.arrayBuffer();
+      imageBuffer = Buffer.from(arrayBuffer);
+    }
+    const id = Number(formData.get("id"));
+    const updatedBook = await bookRepository.updateBook(
+      id,
+      bookData,
+      imageBuffer
+    );
 
     revalidatePath("/admin-dashboard/dashboard");
     return { success: true, message: "Book updated successfully" };

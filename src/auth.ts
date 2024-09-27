@@ -5,6 +5,9 @@ import bcrypt from "bcrypt";
 import { User } from "next-auth";
 import Google from "next-auth/providers/google";
 import { findUserByEmail } from "./actions/memberActions";
+import { MemberRepository } from "./repositories/memberRepository";
+import { db } from "./drizzle/db";
+import { members } from "./drizzle/schema";
 
 function mapMemberToUser(member: {
   id: any;
@@ -77,6 +80,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         (session.user as any).role = token.role;
       }
       return session;
+    },
+    async signIn({ user }) {
+      if (!user) return false;
+      const foundUser = await findUserByEmail(user.email!);
+      if (foundUser) {
+        user.role = foundUser.role;
+        return true;
+      }
+
+      const newUser = await db.insert(members).values({
+        firstName: user.name!,
+        lastName: "",
+        email: user.email!,
+        phoneNumber: "",
+        password: "",
+        role: "member",
+      });
+      user.role = (newUser as any)?.role!;
+      return true;
     },
   },
 });

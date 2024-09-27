@@ -83,6 +83,7 @@ export const professors = pgTable("professors", {
   department: varchar("department", { length: 255 }).notNull(),
   bio: text("bio").notNull(), // Optional bio field, no length limit
   calendly_link: varchar("calendly_link", { length: 255 }),
+  email: varchar("email", { length: 255 }).notNull(),
 });
 // export const favoritesRelations = relations(favorites, ({ one }) => ({
 //   member: one(members, {

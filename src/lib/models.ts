@@ -105,6 +105,7 @@ export interface IProfessorBase {
   department: string;
   bio: string;
   calendly_link: string | null;
+  email: string;
 }
 export interface IProfessor extends IProfessorBase {
   id: number;

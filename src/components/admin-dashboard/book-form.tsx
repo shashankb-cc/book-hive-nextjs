@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,7 @@ const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"];
 
 export default function BookForm({ book }: BookFormProps) {
   const router = useRouter();
+  const { id } = useParams();
   const { toast } = useToast();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -54,6 +55,7 @@ export default function BookForm({ book }: BookFormProps) {
       isbn: book?.isbnNo || "",
       pages: book?.numOfPages || 0,
       copies: book?.totalNumOfCopies || 0,
+      price: book?.price || 200,
     },
   });
 
@@ -90,6 +92,7 @@ export default function BookForm({ book }: BookFormProps) {
       return;
     }
     const formData = new FormData();
+    if (book) formData.append("id", id as string);
     Object.entries(data).forEach(([key, value]) => {
       if (key === "image" && value instanceof FileList && value.length > 0) {
         formData.append(key, value[0]);
@@ -97,9 +100,6 @@ export default function BookForm({ book }: BookFormProps) {
         formData.append(key, value.toString());
       }
     });
-    if (book) {
-      formData.append("id", book.id.toString());
-    }
 
     try {
       const action = book ? updateBook : createBook;
@@ -279,6 +279,24 @@ export default function BookForm({ book }: BookFormProps) {
                     type="number"
                     {...register("copies", { valueAsNumber: true })}
                     placeholder="Total Copies"
+                    className="pl-10"
+                  />
+                </div>
+                {errors.copies && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.copies.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="price">Price</Label>
+                <div className="relative">
+                  <Copy className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Input
+                    id="price"
+                    type="number"
+                    {...register("price", { valueAsNumber: true })}
+                    placeholder="Price of th book"
                     className="pl-10"
                   />
                 </div>

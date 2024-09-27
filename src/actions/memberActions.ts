@@ -101,8 +101,8 @@ export async function findUserByEmail(
   try {
     const memberRepository = new MemberRepository(db);
     const userDetails = await memberRepository.getMemberByEmail(email);
-    console.log("user details", userDetails);
-    return userDetails as IMember;
+    if(userDetails) return userDetails;
+    return undefined;
   } catch (error) {
     console.error("Error fetching user details:", error);
     return undefined;
