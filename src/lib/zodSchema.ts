@@ -1,3 +1,4 @@
+import { PrinterCheckIcon } from "lucide-react";
 import { z } from "zod";
 
 export const loginSchema = z.object({
@@ -55,6 +56,10 @@ export const bookSchema = z.object({
     .number()
     .int()
     .positive("Number of copies must be a positive integer"),
+  price: z
+    .number()
+    .int()
+    .positive("Price must be a positive integer"),
   image: z.any().optional(),
 });
 

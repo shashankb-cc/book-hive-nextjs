@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
 import { IProfessor, IProfessorBase } from "@/lib/models";
+import { checkInvitationStatus, fetchUserDetails, sendInvitation, updateProfessorCalendlyInfo } from "@/helpers/calendlyUserEvents";
 
 const professorRepository = new ProfessorRepository(db);
 
@@ -41,15 +42,24 @@ export async function createProfessor(formData: FormData) {
       name: formData.get("name") as string,
       department: formData.get("department") as string,
       bio: formData.get("bio") as string,
-      calendly_link: formData.get("calendlyLink") as string,
+      calendly_link: formData.get("calendly_link") as string,
+      email: formData.get("email") as string,
     };
 
     const newProfessor = await professorRepository.createProfessor(
       professorData
     );
+    // After successfully creating the professor, send the invitation
+    const email = formData.get("email") as string;
+    if (email) {
+      await sendInvitation(email);
+    }
 
     revalidatePath("/admin-dashboard/professors");
-    return { success: true, message: "Professor added successfully" };
+    return {
+      success: true,
+      message: "Professor added successfully and Invitation has been sent",
+    };
   } catch (error) {
     console.error("Failed to add professor:", error);
     return { error: "Failed to add professor. Please try again." };
@@ -69,7 +79,8 @@ export async function updateProfessor(formData: FormData) {
       name: formData.get("name") as string,
       department: formData.get("department") as string,
       bio: formData.get("bio") as string,
-      calendly_link: formData.get("calendlyLink") as string,
+      calendly_link: formData.get("calendly_link") as string,
+      email: formData.get("email") as string,
     };
 
     await professorRepository.updateProfessor(id, professorData);
@@ -110,5 +121,23 @@ export async function getProfessorById(id: number): Promise<IProfessor | null> {
   } catch (error) {
     console.error("Error fetching professor by ID:", error);
     return null;
+  }
+}
+export async function handleCalendlyStatus(professorId: number, email: string) {
+  try {
+    const status = await checkInvitationStatus(email);
+    if (status.accepted) {
+      const userDetails = await fetchUserDetails(status.userUri);
+      await updateProfessorCalendlyInfo(
+        professorId,
+        userDetails.scheduling_url
+      );
+      return { success: true, calendlyLink: userDetails.scheduling_url };
+    } else {
+      return { success: false, message: "Invitation not accepted yet" };
+    }
+  } catch (error) {
+    console.error("Error checking invitation status:", error);
+    return { success: false, message: "Failed to check invitation status" };
   }
 }

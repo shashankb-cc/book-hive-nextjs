@@ -1,15 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { User, BookOpen, Link as LinkIcon } from "lucide-react";
+import {
+  User,
+  BookOpen,
+  Link as LinkIcon,
+  Mail,
+  Calendar,
+  CheckCircle,
+} from "lucide-react";
 import { IProfessor } from "@/lib/models";
 import { useToast } from "@/hooks/use-toast";
-import { createProfessor, updateProfessor } from "@/actions/professorActions";
+import { createProfessor, handleCalendlyStatus, updateProfessor } from "@/actions/professorActions";
 
 interface ProfessorFormProps {
   professor?: IProfessor;
@@ -18,12 +25,14 @@ interface ProfessorFormProps {
 export default function ProfessorForm({ professor }: ProfessorFormProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     id: professor?.id || 0,
     name: professor?.name || "",
     department: professor?.department || "",
     bio: professor?.bio || "",
     calendly_link: professor?.calendly_link || "",
+    email: professor?.email || "",
   });
 
   const handleChange = (
@@ -54,7 +63,7 @@ export default function ProfessorForm({ professor }: ProfessorFormProps) {
             result.message ||
             (professor
               ? "Professor updated successfully"
-              : "Professor created successfully"),
+              : "Professor created successfully and invitation sent"),
           className: "bg-green-400 text-white",
         });
         router.push("/admin-dashboard/professors");
@@ -123,19 +132,39 @@ export default function ProfessorForm({ professor }: ProfessorFormProps) {
           </div>
 
           <div>
-            <Label htmlFor="calendlyLink">Calendly Link</Label>
+            <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="user@mail.com"
+                className="pl-10"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="calendly_link">Calendly Link</Label>
             <div className="relative">
               <LinkIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input
-                id="calendlyLink"
-                name="calendlyLink"
+                id="calendly_link"
+                name="calendly_link"
+                type="text"
                 value={formData.calendly_link}
                 onChange={handleChange}
                 placeholder="https://calendly.com/your-link"
                 className="pl-10"
+                readOnly
               />
             </div>
           </div>
+
 
           <div className="flex justify-end space-x-4 mt-6">
             <Button

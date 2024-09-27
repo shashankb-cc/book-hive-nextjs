@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,7 @@ interface MemberFormProps {
 
 export default function MemberForm({ member }: MemberFormProps) {
   const router = useRouter();
+  const { id } = useParams();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     id: member?.id || 0,
@@ -46,11 +48,14 @@ export default function MemberForm({ member }: MemberFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formDataToSend = new FormData(e.currentTarget);
-    
+
     try {
       const action = member ? updateMember : createMember;
+
+      if (member) formDataToSend.append("id", id as string);
+
       const result = await action(null, formDataToSend);
-      
+
       if (result.error) {
         toast({
           title: "Error",
@@ -60,7 +65,11 @@ export default function MemberForm({ member }: MemberFormProps) {
       } else {
         toast({
           title: "Success",
-          description: result.message || (member ? "Member updated successfully" : "Member created successfully"),
+          description:
+            result.message ||
+            (member
+              ? "Member updated successfully"
+              : "Member created successfully"),
           className: "bg-green-400 text-white",
         });
         router.push("/admin-dashboard/members");
@@ -188,7 +197,11 @@ export default function MemberForm({ member }: MemberFormProps) {
           </div>
 
           <div className="flex justify-end space-x-4 mt-6">
-            <Button type="button" variant="outline" onClick={() => router.back()}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+            >
               Cancel
             </Button>
             <Button type="submit">{member ? "Update" : "Create"} Member</Button>

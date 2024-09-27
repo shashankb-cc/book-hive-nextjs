@@ -75,10 +75,7 @@ export class BookRepository {
     });
   }
 
-  async uploadImage(file: File): Promise<string> {
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
+  async uploadImage(file: Buffer): Promise<string> {
     return new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
@@ -94,11 +91,11 @@ export class BookRepository {
             }
           }
         )
-        .end(buffer);
+        .end(file);
     });
   }
 
-  async createBook(bookData: Omit<IBook, "id">, imageFile?: File) {
+  async createBook(bookData: Omit<IBook, "id">, imageFile?: Buffer) {
     try {
       let imageUrl = "";
       if (imageFile) {
@@ -117,7 +114,7 @@ export class BookRepository {
     }
   }
 
-  async updateBook(id: number, bookData: Partial<IBook>, imageFile?: File) {
+  async updateBook(id: number, bookData: Partial<IBook>, imageFile?: Buffer) {
     try {
       let imageUrl = bookData.imageUrl;
       if (imageFile) {

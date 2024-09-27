@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Pencil, Trash2, Plus, Calendar } from "lucide-react";
+import { Pencil, Trash2, Plus, Calendar, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { deleteProfessor } from "@/actions/professorActions";
+import { deleteProfessor, handleCalendlyStatus } from "@/actions/professorActions";
 import { IProfessor } from "@/lib/models";
 
 interface ProfessorDashboardProps {
@@ -41,6 +41,7 @@ export default function ProfessorDashboard({
   const { toast } = useToast();
   const [professors, setProfessors] = useState(initialProfessors);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loadingProfessor, setLoadingProfessor] = useState<number | null>(null);
 
   const handleDelete = async (id: number) => {
     const result = await deleteProfessor(id);
@@ -57,6 +58,42 @@ export default function ProfessorDashboard({
         className: "bg-green-800",
       });
       setProfessors(professors.filter((prof) => prof.id !== id));
+    }
+  };
+
+  const handleCheckStatus = async (professor: IProfessor) => {
+    setLoadingProfessor(professor.id);
+    try {
+      const result = await handleCalendlyStatus(professor.id, professor.email);
+      if (result.success) {
+        setProfessors((prevProfessors) =>
+          prevProfessors.map((prof) =>
+            prof.id === professor.id
+              ? { ...prof, calendly_link: result.calendlyLink }
+              : prof
+          )
+        );
+        toast({
+          title: "Success",
+          description: "Calendly link updated successfully",
+          className: "bg-green-400 text-white",
+        });
+      } else {
+        toast({
+          title: "Information",
+          description: result.message,
+          className: "bg-blue-400 text-white",
+        });
+      }
+    } catch (error) {
+      console.error("Error checking invitation status:", error);
+      toast({
+        title: "Error",
+        description: "Failed to check invitation status",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingProfessor(null);
     }
   };
 
@@ -102,7 +139,8 @@ export default function ProfessorDashboard({
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Department</TableHead>
-                    <TableHead>Calendly Link</TableHead>
+                    
+                    <TableHead>Schedule / Check Status</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -111,19 +149,29 @@ export default function ProfessorDashboard({
                     <TableRow key={professor.id}>
                       <TableCell>{professor.name}</TableCell>
                       <TableCell>{professor.department}</TableCell>
+                      
                       <TableCell>
                         {professor.calendly_link ? (
-                          <a
-                            href={professor.calendly_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center text-blue-600 hover:text-blue-800"
+                          <Button
+                            onClick={() =>
+                              window.open(professor?.calendly_link!, "_blank")
+                            }
+                            size="sm"
                           >
-                            <Calendar className="h-4 w-4 mr-2" />
-                            Calendly
-                          </a>
+                            <Calendar className="mr-2 h-4 w-4" />
+                            Schedule Meeting
+                          </Button>
                         ) : (
-                          "N/A"
+                          <Button
+                            onClick={() => handleCheckStatus(professor)}
+                            size="sm"
+                            disabled={loadingProfessor === professor.id}
+                          >
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            {loadingProfessor === professor.id
+                              ? "Checking..."
+                              : "Check Status"}
+                          </Button>
                         )}
                       </TableCell>
                       <TableCell>

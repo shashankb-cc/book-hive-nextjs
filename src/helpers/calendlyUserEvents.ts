@@ -1,4 +1,6 @@
 import { auth } from "@/auth";
+import { ProfessorRepository } from "@/repositories/professorRepository";
+import { db } from "@/drizzle/db";
 
 const ACCESS_TOKEN = process.env.CALENDLY_ACCESS_TOKEN;
 export async function fetchInviteeDetails(eventId: string, email: string) {
@@ -81,3 +83,65 @@ const fetchUserOrganizationUri = async () => {
   const data = await response.json();
   return data.resource.current_organization;
 };
+export async function sendInvitation(email: string) {
+  const orgUrl = await fetchUserOrganizationUri();
+  const orgId = orgUrl.split("/").pop();
+
+  const response = await fetch(
+    `https://api.calendly.com/organizations/${orgId}/invitations`,
+    {
+      method: "POST", // Specify the request method as POST
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    }
+  );
+}
+export async function checkInvitationStatus(email: string) {
+  const orgUrl = await fetchUserOrganizationUri();
+  const orgId = orgUrl.split("/").pop();
+  const response = await fetch(
+    `https://api.calendly.com/organizations/${orgId}/invitations`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const data = await response.json();
+  const invitation = data.collection.find((inv: any) => inv.email === email);
+
+  if (invitation && invitation.status === "accepted") {
+    return { accepted: true, userUri: invitation.user };
+  }
+
+  return { accepted: false };
+}
+export async function fetchUserDetails(userUri: string) {
+  const response = await fetch(userUri, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+  return data.resource;
+}
+export async function updateProfessorCalendlyInfo(
+  professorId: number,
+  schedulingUrl: string
+) {
+  const professorRepository = new ProfessorRepository(db);
+  await professorRepository.updateProfessor(professorId, {
+    calendly_link: schedulingUrl,
+  });
+}

@@ -7,7 +7,6 @@ export async function middleware(req) {
     secret: process.env.AUTH_SECRET,
     secureCookie: process.env.NODE_ENV === "production",
   });
-
   const { pathname } = req.nextUrl;
 
   // Dynamically getting the base URL from the request
@@ -15,6 +14,15 @@ export async function middleware(req) {
 
   // Allow access to public routes
   if (pathname === "/" || pathname === "/login" || pathname === "/register") {
+    // If the user is logged in, redirect based on role
+    if (token) {
+      if (token.role === "librarian") {
+        return NextResponse.redirect(
+          new URL(`${baseUrl}/admin-dashboard`, req.url)
+        );
+      }
+      return NextResponse.redirect(new URL(`${baseUrl}/dashboard`, req.url));
+    }
     return NextResponse.next();
   }
 
