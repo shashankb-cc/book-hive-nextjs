@@ -69,6 +69,19 @@ export interface IMemberBase {
 export interface IMember extends IMemberBase {
   id: number;
 }
+export interface IPaymentBase {
+  userId: number;
+  professorId: number;
+  orderId: string;
+  paymentId?: string | null;
+  signature: string | null;
+  amount: number;
+  status: "pending" | "paid" | "failed";
+}
+
+export interface IPayment extends IPaymentBase {
+  id: number;
+}
 
 export const memberSchema = z.object({
   firstName: z.string().min(3).max(30),

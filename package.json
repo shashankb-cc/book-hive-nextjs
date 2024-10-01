@@ -45,6 +45,7 @@
     "next-auth": "5.0.0-beta.20",
     "next-cloudinary": "^6.13.0",
     "next-intl": "^3.19.4",
+    "razorpay": "^2.9.4",
     "react": "19.0.0-rc-1eaccd82-20240816",
     "react-calendly": "^4.3.1",
     "react-dom": "19.0.0-rc-1eaccd82-20240816",

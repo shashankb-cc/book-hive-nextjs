@@ -74,49 +74,51 @@
     "profileLoadError": "Error: Unable to load user profile",
     "back": "Back"
   },
+
   "HomePage": {
     "header": {
       "title": "BookHive",
+      "buttons": {
+        "logIn": "Log In",
+        "signUp": "Sign Up"
+      },
+      "mobileMenu": "Toggle menu",
       "nav": {
         "home": "Home",
-        "catalog": "Catalog",
-        "myBooks": "My Books",
-        "about": "About"
-      },
-      "buttons": {
-        "signUp": "Sign Up",
-        "logIn": "Log In"
-      },
-      "mobileMenu": "Toggle navigation menu"
+        "favorites": "Favorites",
+        "schedule": "Schedule"
+      }
     },
     "hero": {
       "title": "Welcome to BookHive",
-      "subtitle": "Your digital library for borrowing and returning books. Explore our vast collection and dive into new worlds.",
-      "searchPlaceholder": "Search for books...",
-      "searchButton": "Search"
+      "subtitle": "Explore a world of endless stories and knowledge with just a tap. Whether you're diving into captivating fiction, exploring fascinating facts, or seeking to expand your horizons.",
+      "ctaButton": "Get Started"
     },
     "features": {
       "title": "Our Features",
       "vastCollection": {
         "title": "Vast Collection",
-        "description": "Access thousands of books across various genres and topics."
+        "description": "Access a wide range of academic resources and books"
       },
-      "easyBorrowing": {
-        "title": "Easy Borrowing",
-        "description": "Borrow and return books with just a few clicks."
+      "favorites": {
+        "title": "Favorites",
+        "description": "Save and organize your preferred books and resources"
       },
-      "personalBookshelf": {
-        "title": "Personal Bookshelf",
-        "description": "Keep track of your borrowed books and reading history."
+      "scheduling": {
+        "title": "Easy Scheduling",
+        "description": "Book meetings with professors using our integrated Calendly system"
+      },
+      "payment": {
+        "title": "Secure Payments",
+        "description": "Pay for consultations easily with our Razorpay integration"
       }
     },
     "footer": {
-      "copyright": "© 2023 BookHive. All rights reserved.",
+      "copyright": "© 2024 BookHive. All rights reserved.",
       "terms": "Terms of Service",
-      "privacy": "Privacy"
+      "privacy": "Privacy Policy"
     }
   },
-
   "Dashboard": {
     "title": "Books Dashboard",
     "featuredBooks": "Featured Books",

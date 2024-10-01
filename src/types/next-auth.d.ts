@@ -7,8 +7,8 @@ declare module "next-auth" {
   } //id username email //role
   interface Session extends DefaultSession {
     user: {
-      id: string;
-      role: "librarian" | "member"; 
+      id: number;
+      role: "librarian" | "member";
     } & DefaultSession["user"];
   }
 

@@ -8,6 +8,7 @@ import {
   text,
   uniqueIndex,
   varchar,
+  decimal,
 } from "drizzle-orm/pg-core";
 
 // Define custom enum types
@@ -18,6 +19,7 @@ export const statusEnum = pgEnum("status", [
   "rejected",
   "returned",
 ]);
+export const paymentEnum = pgEnum("status", ["pending", "failed", "paid"]);
 
 export const books = pgTable("books", {
   id: serial("id").primaryKey(),
@@ -84,6 +86,20 @@ export const professors = pgTable("professors", {
   bio: text("bio").notNull(), // Optional bio field, no length limit
   calendly_link: varchar("calendly_link", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
+});
+export const payments = pgTable("payments", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId")
+    .references(() => members.id)
+    .notNull(),
+  professorId: integer("professorId")
+    .references(() => professors.id)
+    .notNull(),
+  orderId: varchar("orderId", { length: 255 }).notNull(),
+  paymentId: varchar("paymentId", { length: 255 }),
+  signature: varchar("signature", { length: 255 }),
+  amount: integer("amount").notNull(),
+  status: paymentEnum("status").notNull(),
 });
 // export const favoritesRelations = relations(favorites, ({ one }) => ({
 //   member: one(members, {

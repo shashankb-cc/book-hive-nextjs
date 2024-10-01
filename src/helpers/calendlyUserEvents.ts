@@ -145,3 +145,43 @@ export async function updateProfessorCalendlyInfo(
     calendly_link: schedulingUrl,
   });
 }
+export async function getOrganizationMembershipDetails(email: string) {
+  try {
+    const url = `https://api.calendly.com/organization_memberships?organization=https://api.calendly.com/organizations/dbb74fad-704e-4231-b269-b34a7237cbbb&email=${email}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      console.error("Failed to fetch memberships:", response.statusText);
+      throw new Error("Failed to fetch memberships");
+    }
+    const data = await response.json();
+    return data.collection[0];
+  } catch (error) {
+    throw error;
+  }
+}
+export async function deleteFromOrganization(email: string) {
+  try {
+    const membershipDetails = await getOrganizationMembershipDetails(email);
+    const uuid = membershipDetails.uri.split("/").pop();
+    const url = `https://api.calendly.com/organization_memberships/${uuid}`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      console.error("Failed to delete memberships:", response.statusText);
+      throw new Error("Failed to delete member");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
