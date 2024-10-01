@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Heart } from "lucide-react";
+import { Heart, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/dashboard/search-form";
@@ -36,6 +36,7 @@ interface DashboardProps {
   totalPages: number;
   genres: string[];
   selectedGenre: string;
+  userCredits: number;
 }
 
 const timeZoneCurrencyMap: Record<string, string> = {
@@ -58,6 +59,7 @@ export default function Dashboard({
   totalPages,
   genres,
   selectedGenre,
+  userCredits,
 }: DashboardProps) {
   const t = useTranslations("Dashboard");
   const commonT = useTranslations("Common");
@@ -218,6 +220,10 @@ export default function Dashboard({
               </div>
             </div>
             <div className="flex items-center space-x-4 w-full sm:w-auto justify-evenly ">
+              <div className="flex items-center space-x-2 text-primary-foreground bg-orange-400 px-3 py-1 rounded-full">
+                <Coins className="w-4 h-4" />
+                <span className="font-medium">{userCredits} Credits</span>
+              </div>
               <LocaleSwitcher />
               <UserDropdown />
             </div>

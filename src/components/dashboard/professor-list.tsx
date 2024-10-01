@@ -1,9 +1,9 @@
 "use client";
 
 import { SetStateAction, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Search, GraduationCap, Calendar } from "lucide-react";
+import { Search, GraduationCap, Calendar, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,38 +22,42 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
-import { getProfessors } from "@/actions/professorActions";
 import { IProfessor } from "@/lib/models";
 import { useTranslations } from "next-intl";
 import RazorpayPayment from "./razor-payment";
 import { checkPaymentStatus, createPayment } from "@/actions/paymentActions";
 import { useSession } from "next-auth/react";
-import { findUserByEmail } from "@/actions/memberActions";
+import { findUserByEmail, updateMemberCredits } from "@/actions/memberActions";
 
-export default function ProfessorList() {
+interface ProfessorListProps {
+  initialProfessors: IProfessor[];
+  userCredits: number;
+}
+
+export default function ProfessorList({
+  initialProfessors,
+  userCredits: initialUserCredits,
+}: ProfessorListProps) {
   const t = useTranslations("ProfessorList");
   const router = useRouter();
   const { data: session } = useSession();
-  const [professors, setProfessors] = useState<IProfessor[]>([]);
+  const [professors, setProfessors] = useState<IProfessor[]>(initialProfessors);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selectedProfessor, setSelectedProfessor] = useState<IProfessor | null>(
     null
   );
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-
-  const fetchProfessors = async () => {
-    const result = await getProfessors();
-    if ("error" in result) {
-      setError(result.error);
-    } else {
-      setProfessors(result);
-    }
-  };
+  const [userCredits, setUserCredits] = useState(initialUserCredits);
 
   useEffect(() => {
-    fetchProfessors();
-  }, [search]);
+    const filteredProfessors = initialProfessors.filter(
+      (professor) =>
+        professor.name.toLowerCase().includes(search.toLowerCase()) ||
+        professor.department.toLowerCase().includes(search.toLowerCase())
+    );
+    setProfessors(filteredProfessors);
+  }, [search, initialProfessors]);
 
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
@@ -72,12 +76,19 @@ export default function ProfessorList() {
       return;
     }
     const member = await findUserByEmail(session?.user?.email!);
-    const hasPaid = await checkPaymentStatus(member?.id!, professor.id);
-    if (hasPaid) {
-      router.push(`/professors/${professor.id}/schedule`);
-    } else {
+    if (!member) {
+      toast({
+        title: "Error",
+        description: "User not found.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (member.credits < professor.credits) {
       setSelectedProfessor(professor);
       setShowPaymentModal(true);
+    } else {
+      router.push(`/professors/${professor.id}/schedule`);
     }
   };
 
@@ -88,19 +99,21 @@ export default function ProfessorList() {
 
   const handlePaymentSuccess = async (response: any) => {
     const member = await findUserByEmail(session?.user?.email!);
-    if (selectedProfessor) {
+    if (selectedProfessor && member) {
       await createPayment({
-        userId: member?.id!,
+        userId: member.id,
         professorId: selectedProfessor.id,
-        amount: 199, // Set the appropriate amount
+        amount: 200,
         status: "paid",
-        signature: response.razorpay_signature,
-        orderId: response.razorpay_order_id, // You might want to generate and store this
-        paymentId: response.razorpay_payment_id, // You might want to store the Razorpay payment ID
+        orderId: response.razorpay_order_id,
+        paymentId: response.razorpay_payment_id,
       });
+      const newCredits = member.credits + 100; // 200 Rs = 100 credits
+      await updateMemberCredits(member.id, newCredits);
+      setUserCredits(newCredits);
       toast({
         title: "Payment Successful",
-        description: "You can now schedule your meeting.",
+        description: "Credits added. You can now schedule your meeting.",
         variant: "default",
       });
       router.push(`/professors/${selectedProfessor.id}/schedule`);
@@ -113,6 +126,41 @@ export default function ProfessorList() {
       description: "Your payment was not successful. Please try again.",
       variant: "destructive",
     });
+    handleClosePaymentModal();
+  };
+
+  const handlePayWithCredits = async () => {
+    if (selectedProfessor && userCredits >= selectedProfessor.credits) {
+      const member = await findUserByEmail(session?.user?.email!);
+      if (member) {
+        await createPayment({
+          userId: member.id,
+          professorId: selectedProfessor.id,
+          amount: 0,
+          status: "paid",
+          orderId: `CREDITS-${Date.now()}`,
+          paymentId: `CREDITS-${Date.now()}`,
+        });
+
+        const newCredits = userCredits - selectedProfessor.credits;
+        await updateMemberCredits(member.id, newCredits);
+        setUserCredits(newCredits);
+
+        toast({
+          title: "Payment Successful",
+          description:
+            "You have successfully paid with credits. You can now schedule your meeting.",
+          variant: "default",
+        });
+        router.push(`/professors/${selectedProfessor.id}/schedule`);
+      }
+    } else {
+      toast({
+        title: "Insufficient Credits",
+        description: "You do not have enough credits to schedule this meeting.",
+        variant: "destructive",
+      });
+    }
     handleClosePaymentModal();
   };
 
@@ -169,9 +217,18 @@ export default function ProfessorList() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {professor.bio}
                   </p>
+                  <div className="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
+                    <div className="flex items-center">
+                      <Coins className="mr-2 text-yellow-500" />
+                      <span className="font-semibold">Required Credits:</span>
+                    </div>
+                    <span className="text-lg font-bold">
+                      {professor.credits}
+                    </span>
+                  </div>
                 </CardContent>
                 <CardFooter>
                   {professor.calendly_link ? (
@@ -200,17 +257,47 @@ export default function ProfessorList() {
               </DialogTitle>
             </DialogHeader>
             <div className="mb-6">
-              <p className="text-lg">
-                Please pay ₹199 to schedule the meeting with{" "}
+              <p className="text-lg mb-4">
+                Schedule a meeting with{" "}
                 <span className="font-semibold">{selectedProfessor?.name}</span>
-                .
               </p>
+              <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <Coins className="mr-2 text-yellow-500" />
+                  <span className="font-semibold">Your Credits:</span>
+                </div>
+                <span className="text-lg font-bold">{userCredits}</span>
+              </div>
+              <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg mt-2">
+                <div className="flex items-center">
+                  <Coins className="mr-2 text-blue-500" />
+                  <span className="font-semibold">Required Credits:</span>
+                </div>
+                <span className="text-lg font-bold">
+                  {selectedProfessor?.credits}
+                </span>
+              </div>
             </div>
-            <RazorpayPayment
-              amount={199} // Set the appropriate amount
-              onSuccess={handlePaymentSuccess}
-              onFailure={handlePaymentFailure}
-            />
+            {userCredits >= (selectedProfessor?.credits || 0) ? (
+              <Button
+                onClick={handlePayWithCredits}
+                className="w-full bg-green-600"
+              >
+                Pay with Credits
+              </Button>
+            ) : (
+              <>
+                <p className="text-red-500 mb-4">
+                  You do not have enough credits. Please buy some credits to
+                  schedule meeting. (2Rs=1 Credit)
+                </p>
+                <RazorpayPayment
+                  amount={200}
+                  onSuccess={handlePaymentSuccess}
+                  onFailure={handlePaymentFailure}
+                />
+              </>
+            )}
           </DialogContent>
         </Dialog>
       </div>

@@ -2,6 +2,8 @@ import React, { Suspense } from "react";
 import Dashboard from "@/components/dashboard/dashboard-client";
 import { getBooks } from "@/actions/bookActions";
 import DashboardSkeleton from "@/components/skeletons/dashboard-skeleton";
+import { getUserDetails } from "@/actions/memberActions";
+import { auth } from "@/auth";
 
 interface DashboardPageProps {
   searchParams: { page?: string; search?: string; genre?: string };
@@ -21,12 +23,17 @@ async function DashboardContent({ searchParams }: DashboardPageProps) {
   const selectedGenre = searchParams.genre || "";
   const booksPerPage = 8;
 
-  const { books, totalPages, genres, recentlyAddedBooks } = await getBooks({
+  const { books, totalPages, genres } = await getBooks({
     page,
     search,
     genre: selectedGenre,
     booksPerPage,
   });
+  const session = await auth();
+  const user = await getUserDetails(session);
+  if ("error" in user) {
+    return;
+  }
 
   return (
     <Dashboard
@@ -35,6 +42,7 @@ async function DashboardContent({ searchParams }: DashboardPageProps) {
       totalPages={totalPages}
       genres={genres}
       selectedGenre={selectedGenre}
+      userCredits={user.credits}
     />
   );
 }

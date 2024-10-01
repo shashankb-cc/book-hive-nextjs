@@ -3,11 +3,12 @@ import { getMemberTransactions } from "@/actions/transactionActions";
 import HistoryClient from "@/components/dashboard/tranasactions-clientpage";
 import { TopNavbar } from "@/components/dashboard/top-navbar";
 import HistorySkeleton from "@/components/skeletons/transaction-skeleton";
+import { auth } from "@/auth";
+import { getUserDetails } from "@/actions/memberActions";
 
 export default function HistoryPage() {
   return (
     <>
-      <TopNavbar />
       <Suspense fallback={<HistorySkeleton />}>
         <HistoryContent />
       </Suspense>
@@ -17,6 +18,15 @@ export default function HistoryPage() {
 
 async function HistoryContent() {
   const transactions = await getMemberTransactions();
-
-  return <HistoryClient initialTransactions={transactions || []} />;
+  const session = await auth();
+  const user = await getUserDetails(session);
+  if ("error" in user) {
+    return;
+  }
+  return (
+    <>
+      <TopNavbar userCredits={user.credits} />
+      <HistoryClient initialTransactions={transactions || []} />
+    </>
+  );
 }

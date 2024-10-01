@@ -30,6 +30,7 @@ export class MemberRepository {
       const email = formData.get("email") as string;
       const phone = formData.get("phone") as string;
       const password = formData.get("password") as string;
+      const credits = 20;
 
       const hashedPassword = await bcrypt.hash(password, 12);
       console.log("formdata", formData);
@@ -40,6 +41,7 @@ export class MemberRepository {
         phoneNumber: phone,
         password: hashedPassword,
         role: "member",
+        credits,
       });
 
       return null;
@@ -49,25 +51,35 @@ export class MemberRepository {
     }
   }
 
-  async updateMember(id: number, formData: FormData): Promise<string | null> {
+  async updateMember(
+    id: number,
+    formData?: FormData,
+    data?: any
+  ): Promise<string | null> {
     try {
-      const firstName = formData.get("firstName") as string;
-      const lastName = formData.get("lastName") as string;
-      const email = formData.get("email") as string;
-      const phone = formData.get("phoneNumber") as string;
-      const role = formData.get("role") as "librarian" | "member";
+      if (formData) {
+        const firstName = formData.get("firstName") as string;
+        const lastName = formData.get("lastName") as string;
+        const email = formData.get("email") as string;
+        const phone = formData.get("phoneNumber") as string;
+        const role = formData.get("role") as "librarian" | "member";
 
+        await this.db
+          .update(members)
+          .set({
+            firstName,
+            lastName,
+            email,
+            phoneNumber: phone,
+            role,
+          })
+          .where(eq(members.id, id));
+        return null;
+      }
       await this.db
         .update(members)
-        .set({
-          firstName,
-          lastName,
-          email,
-          phoneNumber: phone,
-          role,
-        })
+        .set({ credits: data.credits })
         .where(eq(members.id, id));
-
       return null;
     } catch (error) {
       console.error(error);
@@ -192,7 +204,7 @@ export class MemberRepository {
         throw new Error("User details not found in the database");
       }
 
-      const { firstName, lastName, phoneNumber, role } = userDetails;
+      const { firstName, lastName, phoneNumber, role, credits } = userDetails;
 
       return {
         name,
@@ -202,6 +214,7 @@ export class MemberRepository {
         lastName,
         phoneNumber,
         role,
+        credits,
       };
     } catch (error) {
       console.error("Error fetching user details:", error);

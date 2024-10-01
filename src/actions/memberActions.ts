@@ -101,7 +101,7 @@ export async function findUserByEmail(
   try {
     const memberRepository = new MemberRepository(db);
     const userDetails = await memberRepository.getMemberByEmail(email);
-    if(userDetails) return userDetails;
+    if (userDetails) return userDetails;
     return undefined;
   } catch (error) {
     console.error("Error fetching user details:", error);
@@ -188,5 +188,25 @@ export async function getMemberById(id: number): Promise<IMember | undefined> {
   } catch (error) {
     console.error("Error fetching member by ID:", error);
     return undefined;
+  }
+}
+export async function updateMemberCredits(
+  userId: number,
+  creditsChange: number
+) {
+  try {
+    const memberRepository = new MemberRepository(db);
+    const user = await memberRepository.getMemberById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const newCredits = user.credits + creditsChange;
+    await memberRepository.updateMember(userId, undefined, {
+      credits: newCredits,
+    });
+    return { success: true, message: "Credits updated successfully" };
+  } catch (error) {
+    console.error("Error updating member credits:", error);
+    return { error: "Failed to update member credits" };
   }
 }

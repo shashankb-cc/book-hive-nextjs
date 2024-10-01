@@ -1,6 +1,6 @@
 "use client";
 
-import { InlineWidget } from "react-calendly";
+import { InlineWidget, useCalendlyEventListener } from "react-calendly";
 import { motion } from "framer-motion";
 import {
   Card,
@@ -12,6 +12,10 @@ import {
 import { IProfessor } from "@/lib/models";
 import { GraduationCap, Mail, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import { updateMemberCredits } from "@/actions/memberActions";
+// import { updateProfessorCredits } from "@/actions/professorActions";
 
 interface ProfessorScheduleClientProps {
   professor: IProfessor;
@@ -19,13 +23,39 @@ interface ProfessorScheduleClientProps {
     name: string;
     email: string;
   };
+  userId: number;
 }
 
 export default function ProfessorScheduleClient({
   professor,
   prefill,
+  userId,
 }: ProfessorScheduleClientProps) {
   const t = useTranslations("ProfessorSchedule");
+  const router = useRouter();
+
+  useCalendlyEventListener({
+    onEventScheduled: async (e) => {
+      try {
+        await updateMemberCredits(userId, -professor.credits);
+        // await updateProfessorCredits(professor.id, professor.credits);
+        toast({
+          title: "Meeting Scheduled",
+          description: "Your meeting has been scheduled successfully.",
+          variant: "default",
+        });
+      } catch (error) {
+        console.error("Error updating credits:", error);
+        toast({
+          title: "Error",
+          description:
+            "There was an error scheduling your meeting. Please try again.",
+          variant: "destructive",
+        });
+        router.push("/dashboard/professors");
+      }
+    },
+  });
 
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
