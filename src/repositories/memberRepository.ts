@@ -6,6 +6,8 @@ import { auth } from "@/auth";
 import { IMember, IMemberBase } from "@/lib/models";
 import { VercelPgDatabase } from "drizzle-orm/vercel-postgres";
 import * as schema from "@/drizzle/schema";
+import { deleteFromOrganization } from "@/helpers/calendlyUserEvents";
+import { findUserByEmail } from "@/actions/memberActions";
 
 export class MemberRepository {
   constructor(private db: VercelPgDatabase<typeof schema>) {}
@@ -75,6 +77,8 @@ export class MemberRepository {
 
   async deleteMember(id: number): Promise<string | null> {
     try {
+      const user = await this.getMemberById(id);
+      await deleteFromOrganization(user?.email as string);
       await this.db.delete(members).where(eq(members.id, id));
       return null;
     } catch (error) {

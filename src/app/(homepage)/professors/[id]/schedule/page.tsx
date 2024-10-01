@@ -4,6 +4,9 @@ import { auth } from "@/auth";
 import ProfessorScheduleClient from "@/components/dashboard/professor-schedule";
 import { getTranslations } from "next-intl/server";
 import ProfessorScheduleSkeleton from "@/components/skeletons/professor-schedule-skeleton";
+import { checkPaymentStatus } from "@/actions/paymentActions";
+import { redirect } from "next/navigation";
+import { findUserByEmail } from "@/actions/memberActions";
 
 export default function ProfessorSchedulePage({
   params,
@@ -34,9 +37,24 @@ async function ProfessorScheduleContent({
     );
   }
 
+  if (!session || !session.user?.email) {
+    redirect("/login");
+  }
+
+  const user = await findUserByEmail(session.user.email);
+  if (!user) {
+    redirect("/login");
+  }
+
+  const hasPaid = await checkPaymentStatus(user.id, professor.id);
+
+  if (!hasPaid) {
+    redirect(`/professors/${professor.id}/schedule`);
+  }
+
   const prefill = {
-    name: session?.user?.name || "",
-    email: session?.user?.email || "",
+    name: session.user.name || "",
+    email: session.user.email,
   };
 
   return <ProfessorScheduleClient professor={professor} prefill={prefill} />;
