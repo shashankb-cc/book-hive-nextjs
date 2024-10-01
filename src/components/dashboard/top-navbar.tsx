@@ -4,10 +4,11 @@ import React from "react";
 import { UserDropdown } from "@/components/dashboard/user-dropdown";
 
 import { usePathname } from "next/navigation";
-import {  useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import LocaleSwitcher from "../localSwitcher";
+import { Coins } from "lucide-react";
 
-export function TopNavbar() {
+export function TopNavbar({ userCredits }: { userCredits: number }) {
   const t = useTranslations("Common");
   const pathname = usePathname();
 
@@ -26,6 +27,10 @@ export function TopNavbar() {
           </h1>
         </div>
         <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 bg-orange-400 text-primary-foreground px-3 py-1 rounded-full">
+            <Coins className="w-4 h-4" />
+            <span className="font-medium">{userCredits} Credits</span>
+          </div>
           <LocaleSwitcher />
           <UserDropdown />
         </div>

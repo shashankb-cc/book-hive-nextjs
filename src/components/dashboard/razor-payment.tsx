@@ -80,8 +80,12 @@ export default function RazorpayPayment({
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="lazyOnload"
       />
-      <Button onClick={handlePayment} disabled={loading}>
-        {loading ? "Processing..." : `Pay ₹${amount}`}
+      <Button
+        onClick={handlePayment}
+        disabled={loading}
+        className="bg-blue-600"
+      >
+        {loading ? "Processing..." : `Buy 100 Credits (₹${amount})`}
       </Button>
     </>
   );

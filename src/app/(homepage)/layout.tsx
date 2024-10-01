@@ -17,7 +17,6 @@ export default function RootLayout({
     <div className="flex">
       <UserNavBar />
       <div className="flex-1 min-h-screen bg-gray-100 dark:bg-gray-900 ml-16 transition-all duration-300">
-        <TopNavbar />
         <main className="pt-16">{children}</main>
       </div>
     </div>

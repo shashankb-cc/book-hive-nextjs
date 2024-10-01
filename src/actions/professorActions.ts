@@ -5,7 +5,12 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
 import { IProfessor, IProfessorBase } from "@/lib/models";
-import { checkInvitationStatus, fetchUserDetails, sendInvitation, updateProfessorCalendlyInfo } from "@/helpers/calendlyUserEvents";
+import {
+  checkInvitationStatus,
+  fetchUserDetails,
+  sendInvitation,
+  updateProfessorCalendlyInfo,
+} from "@/helpers/calendlyUserEvents";
 
 const professorRepository = new ProfessorRepository(db);
 
@@ -44,6 +49,7 @@ export async function createProfessor(formData: FormData) {
       bio: formData.get("bio") as string,
       calendly_link: formData.get("calendly_link") as string,
       email: formData.get("email") as string,
+      credits: Number(formData.get("email")),
     };
 
     const newProfessor = await professorRepository.createProfessor(
@@ -141,3 +147,4 @@ export async function handleCalendlyStatus(professorId: number, email: string) {
     return { success: false, message: "Failed to check invitation status" };
   }
 }
+

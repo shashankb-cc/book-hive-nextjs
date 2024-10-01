@@ -64,6 +64,7 @@ export interface IMemberBase {
   phoneNumber: string | null;
   password: string;
   role: "librarian" | "member";
+  credits: number;
 }
 
 export interface IMember extends IMemberBase {
@@ -74,7 +75,6 @@ export interface IPaymentBase {
   professorId: number;
   orderId: string;
   paymentId?: string | null;
-  signature: string | null;
   amount: number;
   status: "pending" | "paid" | "failed";
 }
@@ -119,6 +119,7 @@ export interface IProfessorBase {
   bio: string;
   calendly_link: string | null;
   email: string;
+  credits: number;
 }
 export interface IProfessor extends IProfessorBase {
   id: number;

@@ -45,6 +45,7 @@ export const members = pgTable(
     phoneNumber: varchar("phoneNumber", { length: 10 }).notNull(),
     password: varchar("password", { length: 45 }).notNull(),
     role: roleEnum("role"),
+    credits: integer("credits").notNull(),
   },
   (table) => ({
     emailIdx: uniqueIndex("email_idx").on(table.email),
@@ -83,9 +84,10 @@ export const professors = pgTable("professors", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   department: varchar("department", { length: 255 }).notNull(),
-  bio: text("bio").notNull(), // Optional bio field, no length limit
+  bio: text("bio").notNull(),
   calendly_link: varchar("calendly_link", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
+  credits: integer("credits").notNull(),
 });
 export const payments = pgTable("payments", {
   id: serial("id").primaryKey(),
@@ -97,7 +99,6 @@ export const payments = pgTable("payments", {
     .notNull(),
   orderId: varchar("orderId", { length: 255 }).notNull(),
   paymentId: varchar("paymentId", { length: 255 }),
-  signature: varchar("signature", { length: 255 }),
   amount: integer("amount").notNull(),
   status: paymentEnum("status").notNull(),
 });

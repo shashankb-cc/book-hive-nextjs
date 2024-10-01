@@ -96,6 +96,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         phoneNumber: "",
         password: "",
         role: "member",
+        credits: 20,
       });
       user.role = (newUser as any)?.role!;
       return true;

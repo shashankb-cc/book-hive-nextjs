@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import ProfessorScheduleClient from "@/components/dashboard/professor-schedule";
 import { getTranslations } from "next-intl/server";
 import ProfessorScheduleSkeleton from "@/components/skeletons/professor-schedule-skeleton";
-import { checkPaymentStatus } from "@/actions/paymentActions";
 import { redirect } from "next/navigation";
 import { findUserByEmail } from "@/actions/memberActions";
 
@@ -46,10 +45,8 @@ async function ProfessorScheduleContent({
     redirect("/login");
   }
 
-  const hasPaid = await checkPaymentStatus(user.id, professor.id);
-
-  if (!hasPaid) {
-    redirect(`/professors/${professor.id}/schedule`);
+  if (user.credits < professor.credits) {
+    redirect(`/professors`);
   }
 
   const prefill = {
@@ -57,5 +54,11 @@ async function ProfessorScheduleContent({
     email: session.user.email,
   };
 
-  return <ProfessorScheduleClient professor={professor} prefill={prefill} />;
+  return (
+    <ProfessorScheduleClient
+      professor={professor}
+      prefill={prefill}
+      userId={user.id}
+    />
+  );
 }
